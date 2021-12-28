@@ -22,6 +22,7 @@ export default {
 
     // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
     plugins: [
+        '~/plugins/firebase'
     ],
 
     // Auto import components: https://go.nuxtjs.dev/config-components
@@ -53,9 +54,9 @@ export default {
             light: true,
             themes: {
                 light: {
-                    primary: colors.blue.lighten2,
+                    primary: '#4e4d4d',
                     accent: colors.grey.lighten3,
-                    secondary: colors.amber.lighten3,
+                    secondary: '#3bb5e0',
                     info: colors.teal.darken1,
                     warning: colors.amber.base,
                     error: colors.deepOrange.accent4,
@@ -67,5 +68,10 @@ export default {
 
     // Build Configuration: https://go.nuxtjs.dev/config-build
     build: {
+    },
+
+    // Router configs
+    router: {
+        middleware: ['redirect-router']
     }
 }
