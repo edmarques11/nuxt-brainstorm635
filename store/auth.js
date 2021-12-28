@@ -1,34 +1,24 @@
-export const state = () => ({
-    auth: {}
-})
-
-export const mutations = {
-    setAuth(state, payload) {
-        state.auth = payload
-    }
-}
-
 export const actions = {
-    async login({ commit }) {
+    async login() {
         try {
-            const {
-                getAuth,
-                signInWithPopup,
-                GoogleAuthProvider
-            } = this.$firebase.providers
+            const provider = new this.$firebase.auth.GoogleAuthProvider();
 
-            const auth = getAuth()
-            const provider = new GoogleAuthProvider()
-
-            const result = await signInWithPopup(auth, provider)
-
-            const credential = GoogleAuthProvider.credentialFromResult(result)
-            const token = credential.accessToken
-            const user = result.user
-
-            commit('setAuth', { token, ...user })
+            this.$firebase.auth().signInWithPopup(provider).then((result) => {
+                this.$cookies.set('Authorization', result.user.refreshToken)
+                this.$router.push('/')
+            })
         } catch (error) {
             console.error(error)
         }
+    },
+
+    async logout() {
+        try {
+            await this.$firebase.auth().signOut()
+
+            const allCookies = this.$cookies.keys()
+            if (Array.isArray(allCookies) && allCookies.length > 0)
+                allCookies.forEach(key => this.$cookies.remove(key))
+        } catch (error) { }
     }
 }
