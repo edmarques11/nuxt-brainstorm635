@@ -1,8 +1,57 @@
 <template>
     <v-app>
-        <v-app-bar :clipped-left="clipped" fixed app>
+        <v-app-bar color="white" :clipped-left="clipped" fixed app height="76">
             <v-toolbar-title v-text="title" />
             <v-spacer />
+            <v-col cols="4" md="2">
+                <v-row>
+                    <v-col cols="3">
+                        <v-img
+                            width="45"
+                            class="rounded-pill"
+                            :src="currentUser.photoURL"
+                        />
+                    </v-col>
+                    <v-col cols="9" class="px-0">
+                        <div class="text-start">
+                            <v-menu offset-y>
+                                <template v-slot:activator="{ on, attrs }">
+                                    <v-btn
+                                        color="white"
+                                        dark
+                                        v-bind="attrs"
+                                        v-on="on"
+                                        class="black--text elevation-0"
+                                    >
+                                        {{ currentUser.displayName }}
+                                    </v-btn>
+                                </template>
+                                <v-list>
+                                    <v-list-item
+                                        v-for="(item, index) in [
+                                            {
+                                                title: 'Profile',
+                                                action: () => {}
+                                            },
+                                            {
+                                                title: 'Sign Out',
+                                                action: () => singout()
+                                            }
+                                        ]"
+                                        :key="index"
+                                    >
+                                        <v-list-item-title
+                                            class="css-item-menu"
+                                            @click="item.action"
+                                            >{{ item.title }}</v-list-item-title
+                                        >
+                                    </v-list-item>
+                                </v-list>
+                            </v-menu>
+                        </div>
+                    </v-col>
+                </v-row>
+            </v-col>
         </v-app-bar>
         <v-main>
             <v-container>
@@ -17,11 +66,39 @@
 
 <script>
 export default {
+    name: 'default',
+
     data() {
         return {
             clipped: false,
-            title: 'Vuetify.js',
+            title: 'Brainstorm635',
+            currentUser: {}
         }
     },
+
+    async mounted() {
+        try {
+            const { displayName, photoURL } = await this.$store.dispatch(
+                'user/getUserInfo'
+            )
+            this.currentUser = { displayName, photoURL }
+        } catch (error) {}
+    },
+
+    methods: {
+        async singout() {
+            try {
+                await this.$store.dispatch('auth/logout')
+            } catch (error) {
+
+            }
+        }
+    }
 }
 </script>
+
+<style scoped>
+.css-item-menu {
+    cursor: pointer;
+}
+</style>

@@ -18,20 +18,29 @@ export const actions = {
                 commit('SET_TOKEN', refreshToken)
                 success = true
                 this.$cookies.set('Authorization', refreshToken)
-            }).catch(() => { }).finally(() => {
+            }).catch((error) => { throw error }).finally(() => {
                 success ? this.$router.push('/') : ''
             })
 
     },
 
-    async logout() {
+    async logout({ commit }) {
+        let success = false
         try {
             await this.$firebase.auth().signOut()
 
-            const allCookies = this.$cookies.keys()
-            if (Array.isArray(allCookies) && allCookies.length > 0)
+            const allCookies = await this.$cookies.keys()
+            if (allCookies && allCookies.length > 0) {
                 allCookies.forEach(key => this.$cookies.remove(key))
-        } catch (error) { }
+            }
+
+            commit('SET_TOKEN', '')
+            success = true
+        } catch (error) {
+            throw error
+        } finally {
+            if (success) this.$router.push('/login')
+        }
     }
 }
 
