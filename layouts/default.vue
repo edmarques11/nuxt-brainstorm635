@@ -3,7 +3,7 @@
         <v-app-bar color="white" :clipped-left="clipped" fixed app height="76">
             <v-toolbar-title v-text="title" />
             <v-spacer />
-            <v-col cols="4" md="2">
+            <v-col cols="6" sm="4" md="3">
                 <v-row>
                     <v-col cols="3">
                         <v-img
