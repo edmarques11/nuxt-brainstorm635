@@ -8,7 +8,11 @@
                 <v-col cols="8" md="6">
                     <v-row justify="center">
                         <v-col class="text-center">
-                            <v-btn outlined color="secondary">
+                            <v-btn
+                                outlined
+                                color="secondary"
+                                @click="createBrainstorm()"
+                            >
                                 <span> NEW BRAINSTORM</span>
                                 <v-icon>mdi-plus</v-icon></v-btn
                             >
@@ -24,6 +28,7 @@
                                     color="secondary"
                                     elevation="0"
                                     class="css-button-join"
+                                    @click="joinBrainstorm()"
                                     >Join</v-btn
                                 >
                             </v-layout>
@@ -40,10 +45,8 @@ export default {
     name: 'Home',
 
     methods: {
-        toLogin() {
-            console.log('chamou chamou')
-            this.$router.push('/teste')
-        }
+        createBrainstorm() {},
+        joinBrainstorm() {}
     }
 }
 </script>
