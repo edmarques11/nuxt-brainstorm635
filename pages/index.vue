@@ -73,9 +73,22 @@
                 </v-card-text>
                 <v-card-actions>
                     <v-spacer />
-                    <v-btn color="primary" nuxt to="/"> Continue </v-btn>
+                    <v-btn color="primary" @click="toLogin()"> Continue </v-btn>
                 </v-card-actions>
             </v-card>
         </v-col>
     </v-row>
 </template>
+
+<script>
+export default {
+    name: 'Home',
+
+    methods: {
+        toLogin() {
+            console.log('chamou chamou')
+            this.$router.push('/teste')
+        }
+    }
+}
+</script>

@@ -25,6 +25,7 @@ export default {
     plugins: [
         '~/plugins/firebase',
         '~/plugins/vue-cookies',
+        '~/plugins/auth-access',
     ],
 
     // Auto import components: https://go.nuxtjs.dev/config-components
