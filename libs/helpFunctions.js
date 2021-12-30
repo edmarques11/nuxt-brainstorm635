@@ -1,3 +1,15 @@
+export function getCurrenteUserInfo(firebase) {
+    return new Promise((resolve, reject) => {
+        firebase.auth().onAuthStateChanged(user => {
+            if (user) {
+                resolve(user)
+            } else {
+                resolve(null)
+            }
+        })
+    })
+}
+
 export function codeGenerator(length = 6) {
     let result = ''
     const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'

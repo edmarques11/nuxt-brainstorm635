@@ -1,4 +1,4 @@
-import getCurrenteUserInfo from "~/libs/getCurrentUser"
+import { getCurrenteUserInfo } from "~/libs/helpFunctions"
 
 export const actions = {
     async getUserInfo() {

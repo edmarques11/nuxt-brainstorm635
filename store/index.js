@@ -1,5 +1,5 @@
 import firebase from 'firebase/app'
-import { codeGenerator } from '~/libs/CodeGenerate'
+import { codeGenerator } from '~/libs/helpFunctions'
 
 export const actions = {
     async createNewBrainstorm({ dispatch }) {
