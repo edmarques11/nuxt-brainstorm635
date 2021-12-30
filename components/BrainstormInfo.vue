@@ -10,6 +10,7 @@
                     hide-details
                     placeholder="Brainstorm desciption"
                     class="css-input-border m-0"
+                    :disabled="!isLeader"
                     @blur="saveInfos()"
                 />
             </v-col>
@@ -39,6 +40,10 @@ export default {
         brainstormId() {
             return this.$store.getters['brainstormRoom/getBrainstormInfos']
                 .brainstormId
+        },
+        isLeader() {
+            return this.$store.getters['brainstormRoom/getBrainstormInfos']
+                .isLeader
         },
         countMembers() {
             return this.$store.getters['brainstormRoom/getBrainstormInfos']

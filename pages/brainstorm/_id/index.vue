@@ -17,6 +17,7 @@
                     color="secondary"
                     outlined
                     class="rounded-pill"
+                    :disabled="!isLeader"
                     @click="running = true"
                 >
                     Start
