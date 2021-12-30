@@ -1,7 +1,7 @@
 <template>
     <v-layout>
         <v-row>
-            <v-col cols="4">
+            <v-col cols="12" sm="4" md="3">
                 <p class="mb-0">
                     Theme/Description <span class="red--text">*</span>
                 </p>
@@ -13,17 +13,17 @@
                     @blur="saveInfos()"
                 />
             </v-col>
-            <v-col cols="2">
+            <v-col cols="12" sm="4" md="3">
                 <p class="mb-0">Rounds time <span class="red--text">*</span></p>
                 <div class="css-information-area">{{ roundsTime }}</div>
             </v-col>
-            <v-col cols="3">
+            <v-col cols="12" sm="4" md="3">
                 <p class="mb-0">Brainstorm code</p>
                 <div class="css-information-area">
                     {{ brainstormId }}
                 </div>
             </v-col>
-            <v-col cols="3">
+            <v-col cols="12" sm="4" md="3">
                 <p class="mb-0">Active members</p>
                 <div class="css-information-area">{{ countMembers }}</div>
             </v-col>

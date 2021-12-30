@@ -6,7 +6,7 @@ export const actions = {
         let success = false
         const brainstormId = codeGenerator(6)
         try {
-            const { displayName, photoURL, uid } = await dispatch('user/getUserInfo')
+            const { displayName, photoURL, uid } = await dispatch('user/getUserInfo', {}, { root: true })
             const user = {
                 displayName,
                 photoURL,
@@ -56,7 +56,7 @@ export const actions = {
                 throw new Error('Brainstorm not existent!')
             }
 
-            const { displayName, photoURL, uid } = await dispatch('user/getUserInfo')
+            const { displayName, photoURL, uid } = await dispatch('user/getUserInfo', {}, { root: true })
 
             const userGuest = { displayName, photoURL, uid }
 
@@ -83,6 +83,22 @@ export const actions = {
             if (success) {
                 pushToBrainstorm(this.$router, codeRoom)
             }
+        }
+    },
+
+    verifyRunningAndStop({ rootGetters }) {
+        // const stoped = rootGetters['aindaImplementar']
+        const { running, brainstormId, currentRound } = rootGetters['brainstormRoom/getBrainstormInfos']
+        const currentRouteName = this.$router.currentRoute.name
+
+        // if (stoped) return
+
+        if (!running && currentRouteName !== 'brainstorm-id') {
+            return this.$router.push({ path: `/brainstorm/${brainstormId}` })
+        }
+
+        if (running && currentRouteName !== 'brainstorm-id-roundId') {
+            return this.$router.push({ path: `/brainstorm/${brainstormId}/round${currentRound}` })
         }
     }
 }

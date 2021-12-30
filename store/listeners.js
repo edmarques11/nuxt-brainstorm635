@@ -1,10 +1,10 @@
 export const state = () => ({
-    listeners: []
+    listeners: {}
 })
 
 export const mutations = {
     ADD_LISTENER(state, payload) {
-        state.listeners.push(payload)
+        state.listeners[payload.name] = payload.listener
     }
 }
 
@@ -12,11 +12,8 @@ export const actions = {
     stopListener({ getters }, listenerName) {
         const listeners = getters['getListeners']
 
-        const listener = listeners.find(lis => lis.name === listenerName)
-
-        if (listener) {
-            console.log('Destriu o listener')
-            listener.stop()
+        if (listeners[listenerName]) {
+            listeners[listenerName]()
         }
     }
 }

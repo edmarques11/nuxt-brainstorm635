@@ -1,5 +1,4 @@
 import firebase from 'firebase/app'
-import { getCurrentUserInfo } from '~/libs/helpFunctions'
 
 export const state = () => ({
     brainstormInfos: {
@@ -25,12 +24,21 @@ export const mutations = {
 export const actions = {
     async saveInfos({ getters }) {
         try {
-            const { description, roundsTime, brainstormId } = getters['getBrainstormInfos']
+            const {
+                description,
+                roundsTime,
+                brainstormId,
+                running,
+                currentRound
+            } = getters['getBrainstormInfos']
+
             const database = this.$firebase.firestore().collection('brainstorms').doc(brainstormId)
 
             await database.update({
                 description,
                 roundsTime,
+                running,
+                currentRound,
                 updated_at: firebase.firestore.FieldValue.serverTimestamp(),
             })
         } catch (error) {
@@ -38,17 +46,17 @@ export const actions = {
         }
     },
 
-    async getRoomInfos({ commit, getters }) {
+    async getRoomInfos({ commit, getters, dispatch }) {
         try {
             const brainstormId = getters['getBrainstormInfos'].brainstormId
-            const { uid } = await getCurrentUserInfo(this.$firebase)
-            const currentUserId = uid
+            const currentUser = await dispatch('user/getUserInfo',{}, { root: true })
 
             const db = this.$firebase.firestore()
             const listenerGetRoomInfos = db.collection('brainstorms')
                 .doc(brainstormId)
                 .onSnapshot(doc => {
                     if (!doc.exists) {
+                        listenerGetRoomInfos()
                         throw new Error('The Brainstorm not exist!')
                     }
 
@@ -60,14 +68,39 @@ export const actions = {
                         currentRound: data.currentRound,
                         running: data.running,
                         roundsTime: data.roundsTime,
-                        isLeader: data.leader === currentUserId
+                        isLeader: data.leader === currentUser.uid
                     })
                 })
 
             commit('listeners/ADD_LISTENER', {
                 name: 'listenerGetRoomInfos',
-                stop: listenerGetRoomInfos
+                listener: listenerGetRoomInfos
             }, { root: true })
+        } catch (error) {
+            throw error
+        }
+    },
+
+    async createSheet({ getters, dispatch }) {
+        try {
+            const { listGuests, brainstormId } = getters['getBrainstormInfos']
+            const currentUser = await dispatch('user/getUserInfo',{}, { root: true })
+
+            const indexUser = listGuests.findIndex(guest => {
+                return guest.uid === currentUser.uid
+            })
+
+            const dataSheet = {
+                owner: currentUser.uid
+            }
+            const sheet = 'sheet' + (indexUser + 1)
+
+            const brainstorm = this.$firebase.
+                firestore()
+                .collection('brainstorms')
+                .doc(brainstormId)
+
+            await brainstorm.collection('sheets').doc(sheet).set(dataSheet, { merge: true })
         } catch (error) {
             throw error
         }
