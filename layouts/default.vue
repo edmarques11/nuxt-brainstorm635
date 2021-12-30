@@ -31,7 +31,7 @@
 
 <script>
 export default {
-    name: 'default',
+    name: 'DefaultLayout',
 
     data() {
         return {
@@ -62,8 +62,3 @@ export default {
 }
 </script>
 
-<style scoped>
-.css-item-menu {
-    cursor: pointer;
-}
-</style>

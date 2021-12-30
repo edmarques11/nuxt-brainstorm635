@@ -22,3 +22,10 @@ export function codeGenerator(length = 6) {
 
     return result
 }
+
+export function pushToBrainstorm(router, brainstormId) {
+    router.push({
+        name: 'brainstorm-id',
+        params: { id: brainstormId }
+    })
+}

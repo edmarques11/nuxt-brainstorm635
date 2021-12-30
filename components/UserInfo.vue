@@ -50,5 +50,8 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
+.css-item-menu {
+    cursor: pointer;
+}
 </style>
