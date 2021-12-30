@@ -1,0 +1,31 @@
+.css-input-border {
+    padding-top: 0 !important;
+    margin-top: 0 !important;
+
+    border: solid 1px #ced4da !important;
+    border-radius: 5px 5px 5px 5px;
+
+    .v-input__control > .v-input__slot:before,
+    .v-input__control > .v-input__slot:after {
+        display: none !important;
+    }
+
+    .v-input__append-inner {
+        margin-top: 0 !important;
+    }
+
+    input {
+        margin-left: 4px !important;
+    }
+}
+
+.css-information-area {
+    background-color: #e6e6e6;
+    height: 34px;
+    border-radius: 5px;
+
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+}
