@@ -54,6 +54,11 @@ export default {
     methods: {
         returnIconOpenCloseMenu(isOpen) {
             return `mdi-menu-${isOpen === 'true' ? 'up' : 'down'}`
+        },
+        async singout() {
+            try {
+                await this.$store.dispatch('auth/logout')
+            } catch (error) {}
         }
     }
 }

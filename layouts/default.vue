@@ -48,16 +48,6 @@ export default {
             )
             this.currentUser = { displayName, photoURL }
         } catch (error) {}
-    },
-
-    methods: {
-        async singout() {
-            try {
-                await this.$store.dispatch('auth/logout')
-            } catch (error) {
-
-            }
-        }
     }
 }
 </script>
