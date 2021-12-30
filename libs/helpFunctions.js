@@ -1,4 +1,4 @@
-export function getCurrenteUserInfo(firebase) {
+export function getCurrentUserInfo(firebase) {
     return new Promise((resolve, reject) => {
         firebase.auth().onAuthStateChanged(user => {
             if (user) {
@@ -24,7 +24,7 @@ export function codeGenerator(length = 6) {
 }
 
 export function pushToBrainstorm(router, brainstormId) {
-    router.push({
+    router.replace({
         name: 'brainstorm-id',
         params: { id: brainstormId }
     })

@@ -23,7 +23,12 @@
                                     v-model="joinCode"
                                     hide-details
                                     placeholder="Join with code"
-                                    class="p-0 m-0 css-input-border"
+                                    class="
+                                        p-0
+                                        m-0
+                                        css-input-border
+                                        css-no-border-right
+                                    "
                                 />
                                 <v-btn
                                     color="secondary"
@@ -46,7 +51,7 @@ export default {
     name: 'Home',
 
     data: () => ({
-        joinCode: null,
+        joinCode: null
     }),
 
     methods: {
@@ -68,12 +73,16 @@ export default {
 }
 </script>
 
-<style lang="scss">
+<style lang="css">
 .css-layout-newBrainstorm {
     height: calc(100vh - 150px) !important;
 }
 
 .css-button-join {
     border-radius: 0 5px 5px 0;
+}
+
+.css-input-border.css-no-border-right {
+    border-radius: 5px 0 0 5px;
 }
 </style>

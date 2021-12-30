@@ -9,7 +9,10 @@
                     v-on="on"
                     class="black--text elevation-0"
                 >
-                    {{ currentUser.displayName }}
+                    <span>{{ currentUser.displayName }}</span
+                    ><v-icon>{{
+                        returnIconOpenCloseMenu(attrs['aria-expanded'])
+                    }}</v-icon>
                 </v-btn>
             </template>
             <v-list>
@@ -45,6 +48,12 @@ export default {
         currentUser: {
             type: Object,
             default: () => {}
+        }
+    },
+
+    methods: {
+        returnIconOpenCloseMenu(isOpen) {
+            return `mdi-menu-${isOpen === 'true' ? 'up' : 'down'}`
         }
     }
 }

@@ -72,7 +72,7 @@ export const actions = {
             }
 
             await brainstorm.update({
-                currentDate: firebase.firestore.FieldValue.serverTimestamp(),
+                updated_at: firebase.firestore.FieldValue.serverTimestamp(),
                 listGuests: firebase.firestore.FieldValue.arrayUnion(userGuest)
             })
 

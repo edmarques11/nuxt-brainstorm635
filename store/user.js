@@ -1,4 +1,4 @@
-import { getCurrenteUserInfo } from "~/libs/helpFunctions"
+import { getCurrentUserInfo } from "~/libs/helpFunctions"
 
 export const actions = {
     async getUserInfo() {
@@ -8,7 +8,7 @@ export const actions = {
                 email,
                 photoURL,
                 uid
-            } = await getCurrenteUserInfo(this.$firebase)
+            } = await getCurrentUserInfo(this.$firebase)
 
             return { displayName, email, photoURL, uid }
         } catch (error) {
