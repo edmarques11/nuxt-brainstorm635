@@ -87,11 +87,8 @@ export const actions = {
     },
 
     verifyRunningAndStop({ rootGetters }) {
-        // const stoped = rootGetters['aindaImplementar']
         const { running, brainstormId, currentRound } = rootGetters['brainstormRoom/getBrainstormInfos']
         const currentRouteName = this.$router.currentRoute.name
-
-        // if (stoped) return
 
         if (!running && currentRouteName !== 'brainstorm-id') {
             return this.$router.push({ path: `/brainstorm/${brainstormId}` })
