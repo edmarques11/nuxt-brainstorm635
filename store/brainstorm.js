@@ -1,6 +1,32 @@
 import firebase from 'firebase/app'
 import { codeGenerator, pushToBrainstorm } from '~/libs/helpFunctions'
 
+export const state = () => ({
+    brainstormDate: '',
+    concluded: false,
+    currentRound: 0,
+    description: '',
+    hourOfStartRound: '',
+    leader: '',
+    listFinishWriteIdeas: [],
+    listGuests: [{
+        displayName: '',
+        photoURL: '',
+        uid: ''
+    }],
+    roundsTime: '5:00',
+    runing: false
+})
+
+export const mutations = {
+    SET_BRAINSTORM_STATE(state, { field, data }) {
+        state[field] = data
+    },
+    SET_STATE(state, payload) {
+        Object.assign(state, payload)
+    }
+}
+
 export const actions = {
     async createNewBrainstorm({ dispatch }) {
         let success = false
@@ -86,8 +112,9 @@ export const actions = {
         }
     },
 
-    verifyRunningAndStop({ rootGetters }) {
-        const { running, brainstormId, currentRound } = rootGetters['brainstormRoom/getBrainstormInfos']
+    verifyRunningAndStop({ getters, rootGetters }) {
+        const { running, currentRound } = getters['getBrainstorm']
+        const { brainstormId } = rootGetters['brainstormRoom/getBrainstormInfos']
         const currentRouteName = this.$router.currentRoute.name
 
         if (!running && currentRouteName !== 'brainstorm-id') {
@@ -98,4 +125,11 @@ export const actions = {
             return this.$router.push({ path: `/brainstorm/${brainstormId}/round${currentRound}` })
         }
     }
+}
+
+export const getters = {
+    getBrainstorm: state => state,
+    getListGuests: state => state.listGuests,
+    leader: state => state.leader,
+    getListFinishWriteIdeas: state => state.listFinishWriteIdeas
 }

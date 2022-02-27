@@ -1,23 +1,12 @@
 import firebase from 'firebase/app'
 
 export const state = () => ({
-    brainstormInfos: {
-        brainstormId: '',
-        roundsTime: '5:00',
-        description: null,
-        listGuests: [],
-        isLeader: false,
-        currentRound: 1,
-        running: false
-    }
+    brainstormId: ''
 })
 
 export const mutations = {
-    SET_BRAINSTORM_INFOS(state, payload) {
-        Object.assign(state.brainstormInfos, payload)
-    },
-    SET_BRAINSTORM_INFOS_FIELD(state, { field, value }) {
-        state.brainstormInfos[field] = value
+    SET_STATE(state, { field, data }) {
+        state[field] = data
     }
 }
 
@@ -49,7 +38,6 @@ export const actions = {
     async getRoomInfos({ commit, getters, dispatch }) {
         try {
             const brainstormId = getters['getBrainstormInfos'].brainstormId
-            const currentUser = await dispatch('user/getUserInfo',{}, { root: true })
 
             const db = this.$firebase.firestore()
             const listenerGetRoomInfos = db.collection('brainstorms')
@@ -62,14 +50,15 @@ export const actions = {
 
                     const data = doc.data()
 
-                    commit('SET_BRAINSTORM_INFOS', {
+                    commit('brainstorm/SET_STATE', {
                         listGuests: data.listGuests,
                         description: data.description,
                         currentRound: data.currentRound,
                         running: data.running,
                         roundsTime: data.roundsTime,
-                        isLeader: data.leader === currentUser.uid
-                    })
+                        listGuests: data.listGuests,
+                        leader: data.leader
+                    }, { root: true })
                 })
 
             commit('listeners/ADD_LISTENER', {
@@ -84,7 +73,7 @@ export const actions = {
     async createSheet({ getters, dispatch }) {
         try {
             const { listGuests, brainstormId } = getters['getBrainstormInfos']
-            const currentUser = await dispatch('user/getUserInfo',{}, { root: true })
+            const currentUser = await dispatch('user/getUserInfo', {}, { root: true })
 
             const indexUser = listGuests.findIndex(guest => {
                 return guest.uid === currentUser.uid
@@ -108,5 +97,24 @@ export const actions = {
 }
 
 export const getters = {
-    getBrainstormInfos: state => state.brainstormInfos
+    getBrainstormInfos: (state, getters, rootState, rootGetters) => {
+        const brainstormId = state.brainstormId
+
+        const {
+            roundsTime,
+            description,
+            listGuests,
+            currentRound,
+            running
+        } = rootGetters['brainstorm/getBrainstorm']
+
+        return {
+            brainstormId,
+            roundsTime,
+            description,
+            listGuests,
+            currentRound,
+            running
+        }
+    }
 }

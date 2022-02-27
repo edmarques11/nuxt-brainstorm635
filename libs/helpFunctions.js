@@ -24,7 +24,7 @@ export function codeGenerator(length = 6) {
 }
 
 export function pushToBrainstorm(router, brainstormId) {
-    router.replace({
+    router.push({
         name: 'brainstorm-id',
         params: { id: brainstormId }
     })

@@ -57,14 +57,14 @@ export default {
     methods: {
         async createBrainstorm() {
             try {
-                await this.$store.dispatch('createNewBrainstorm')
+                await this.$store.dispatch('brainstorm/createNewBrainstorm')
             } catch (error) {
                 console.error(error)
             }
         },
         async joinBrainstorm() {
             try {
-                await this.$store.dispatch('joinInBrainstorm', this.joinCode)
+                await this.$store.dispatch('brainstorm/joinInBrainstorm', this.joinCode)
             } catch (error) {
                 console.error(error)
             }

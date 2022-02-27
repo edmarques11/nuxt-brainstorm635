@@ -56,7 +56,7 @@ export default {
             },
             set(newVal) {
                 this.$store.commit(
-                    'brainstormRoom/SET_BRAINSTORM_INFOS_FIELD',
+                    'brainstorm/SET_BRAINSTORM_STATE',
                     {
                         field: 'description',
                         value: newVal
@@ -71,7 +71,7 @@ export default {
             },
             set(newVal) {
                 this.$store.commit(
-                    'brainstormRoom/SET_BRAINSTORM_INFOS_FIELD',
+                    'brainstorm/SET_BRAINSTORM_STATE',
                     {
                         field: 'roundsTime',
                         value: newVal

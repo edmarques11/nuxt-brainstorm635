@@ -38,7 +38,7 @@ export default {
             },
             set(newVal) {
                 this.$store.commit(
-                    'brainstormRoom/SET_BRAINSTORM_INFOS_FIELD',
+                    'brainstormSET_BRAINSTORM_STATE',
                     {
                         field: 'running',
                         value: newVal
@@ -63,7 +63,7 @@ export default {
     watch: {
         running(newVal) {
             if (!newVal) {
-                this.$store.dispatch('verifyRunningAndStop')
+                this.$store.dispatch('brainstorm/verifyRunningAndStop')
             }
         }
     },

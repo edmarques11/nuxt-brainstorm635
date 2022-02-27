@@ -38,18 +38,14 @@ export default {
                     .running
             },
             set(newVal) {
-                this.$store.commit(
-                    'brainstormRoom/SET_BRAINSTORM_INFOS_FIELD',
-                    {
-                        field: 'running',
-                        value: newVal
-                    }
-                )
+                this.$store.commit('brainstorm/SET_BRAINSTORM_STATE', {
+                    field: 'running',
+                    data: newVal
+                })
             }
         },
         isLeader() {
-            return this.$store.getters['brainstormRoom/getBrainstormInfos']
-                .isLeader
+            return this.$store.getters['brainstorm/leader'] === this.$store.getters['user/getUid']
         },
         currentRound() {
             return this.$store.getters['brainstormRoom/getBrainstormInfos']
@@ -61,15 +57,21 @@ export default {
         }
     },
 
-    created() {
-        this.$store.commit('brainstormRoom/SET_BRAINSTORM_INFOS_FIELD', {
-            field: 'brainstormId',
-            value: this.$route.params.id
-        })
+    async created() {
+        try {
+            this.$store.commit('brainstormRoom/SET_STATE', {
+                field: 'brainstormId',
+                data: this.$route.params.id
+            })
 
-        this.$store.dispatch('verifyRunningAndStop')
+            await this.$store.dispatch('brainstorm/verifyRunningAndStop')
 
-        this.getBrainstormInfo()
+            await this.getBrainstormInfo()
+
+            await this.$store.dispatch('user/setUserInfoState')
+        } catch (error) {
+            console.error(error)
+        }
     },
 
     methods: {
@@ -84,13 +86,10 @@ export default {
             let success = false
             try {
                 if (this.currentRound < 1) {
-                    this.$store.commit(
-                        'brainstormRoom/SET_BRAINSTORM_INFOS_FIELD',
-                        {
-                            field: 'currentRound',
-                            value: 1
-                        }
-                    )
+                    this.$store.commit('brainstorm/SET_BRAINSTORM_STATE', {
+                        field: 'currentRound',
+                        value: 1
+                    })
                 }
                 await this.$store.dispatch('brainstormRoom/saveInfos')
                 await this.$store.dispatch('brainstormRoom/createSheet')
