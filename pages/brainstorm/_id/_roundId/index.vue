@@ -33,12 +33,12 @@ export default {
     computed: {
         running: {
             get() {
-                return this.$store.getters['brainstormRoom/getBrainstormInfos']
+                return this.$store.getters['writeIdeas/getBrainstormInfos']
                     .running
             },
             set(newVal) {
                 this.$store.commit(
-                    'brainstormSET_BRAINSTORM_STATE',
+                    'brainstorm/SET_BRAINSTORM_STATE',
                     {
                         field: 'running',
                         data: newVal

@@ -32,5 +32,6 @@ export const actions = {
 }
 
 export const getters = {
-    getNewIdeas: state => state.newIdeas
+    getNewIdeas: state => state.newIdeas,
+    getOldIdeas: state => state.getOldIdeas
 }

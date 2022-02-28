@@ -124,7 +124,34 @@ export const actions = {
         if (running && currentRouteName !== 'brainstorm-id-roundId') {
             return this.$router.push({ path: `/brainstorm/${brainstormId}/round${currentRound}` })
         }
-    }
+    },
+
+    async getBrainstormInfos({ commit, getters }, localListener) {
+        try {
+            const brainstormId = getters['getBrainstormInfos'].brainstormId
+
+            const db = this.$firebase.firestore()
+            const listenerInfos = db.collection('brainstorms')
+                .doc(brainstormId)
+                .onSnapshot(doc => {
+                    if (!doc.exists) {
+                        listenerInfos()
+                        throw new Error('The Brainstorm not exist!')
+                    }
+
+                    const data = doc.data()
+
+                    commit('brainstorm/SET_STATE', data, { root: true })
+                })
+
+            commit('listeners/ADD_LISTENER', {
+                name: localListener,
+                listener: listenerInfos
+            }, { root: true })
+        } catch (error) {
+            throw error
+        }
+    },
 }
 
 export const getters = {
