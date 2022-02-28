@@ -61,9 +61,20 @@ export default {
                 'brainstorm/getBrainstormInfos',
                 'writeIdeas'
             )
+        } catch (error) {
+            console.error(error)
+        }
+    },
+
+    mounted() {
+        try {
+            const { roundsTime, hourOfStartRound } =
+                this.$store.getters['brainstorm/getBrainstorm']
+
+            this.$store.dispatch('writeIdeas/chooseSheet')
 
             this.clock = new this.$clock()
-            this.clock.startTimer()
+            this.clock.startTimer(roundsTime, hourOfStartRound)
         } catch (error) {
             console.error(error)
         }

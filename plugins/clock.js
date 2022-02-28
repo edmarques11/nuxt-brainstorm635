@@ -15,6 +15,7 @@ class Clock {
         this.__timeSeconds = timeSeconds
         this.__time = roundsTime
         this.__interval = () => { }
+        this.__timeCleaned = false
     }
 
     __decrementTime() {
@@ -30,7 +31,7 @@ class Clock {
             } else if (seconds > 0) {
                 seconds--
             } else {
-                clearInterval(this.__interval)
+                this.stopTimer()
             }
 
             this.__time =
@@ -49,7 +50,12 @@ class Clock {
     }
 
     stopTimer() {
+        this.__timeCleaned = true
         clearInterval(this.__interval)
+    }
+
+    timeEncerred() {
+        return this.__timeCleaned
     }
 }
 
