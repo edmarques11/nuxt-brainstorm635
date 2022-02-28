@@ -5,7 +5,7 @@ export const state = () => ({})
 export const mutations = {}
 
 export const actions = {
-    async saveInfos({ getters }) {
+    async saveInfos({ rootGetters }) {
         try {
             const {
                 description,
@@ -13,7 +13,7 @@ export const actions = {
                 brainstormId,
                 running,
                 currentRound
-            } = getters['getBrainstormInfos']
+            } = rootGetters['brainstorm/getBrainstorm']
 
             const database = this.$firebase.firestore().collection('brainstorms').doc(brainstormId)
 
@@ -29,9 +29,9 @@ export const actions = {
         }
     },
 
-    async createSheet({ getters, dispatch }) {
+    async createSheet({ rootGetters, dispatch }) {
         try {
-            const { listGuests, brainstormId } = getters['getBrainstormInfos']
+            const { listGuests, brainstormId } = rootGetters['brainstorm/getBrainstorm']
             const currentUser = await dispatch('user/getUserInfo', {}, { root: true })
 
             const indexUser = listGuests.findIndex(guest => {

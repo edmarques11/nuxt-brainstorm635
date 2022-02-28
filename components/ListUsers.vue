@@ -33,7 +33,7 @@ export default {
 
     computed: {
         listGuests() {
-            return this.$store.getters['brainstormRoom/getBrainstormInfos']
+            return this.$store.getters['brainstorm/getBrainstorm']
                 .listGuests
         }
     }

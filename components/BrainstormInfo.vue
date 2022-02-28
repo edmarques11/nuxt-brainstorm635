@@ -49,12 +49,11 @@ export default {
 
     computed: {
         countMembers() {
-            return this.$store.getters['brainstormRoom/getBrainstormInfos']
-                .listGuests.length
+            return this.$store.getters['brainstorm/getListGuests'].length
         },
         description: {
             get() {
-                return this.$store.getters['brainstormRoom/getBrainstormInfos']
+                return this.$store.getters['brainstorm/getBrainstorm']
                     .description
             },
             set(newVal) {
@@ -69,7 +68,7 @@ export default {
         },
         roundsTime: {
             get() {
-                return this.$store.getters['brainstormRoom/getBrainstormInfos']
+                return this.$store.getters['brainstorm/getBrainstorm']
                     .roundsTime
             },
             set(newVal) {

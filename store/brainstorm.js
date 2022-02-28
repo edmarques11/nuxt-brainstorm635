@@ -3,6 +3,7 @@ import { codeGenerator, pushToBrainstorm } from '~/libs/helpFunctions'
 
 export const state = () => ({
     brainstormDate: '',
+    brainstormId: '',
     concluded: false,
     currentRound: 0,
     description: '',
@@ -28,7 +29,7 @@ export const mutations = {
 }
 
 export const actions = {
-    async createNewBrainstorm({ dispatch }) {
+    async createNewBrainstorm({ dispatch, commit }) {
         let success = false
         const brainstormId = codeGenerator(6)
         try {
@@ -44,6 +45,7 @@ export const actions = {
                 .collection('brainstorms')
                 .doc(brainstormId.toString())
                 .set({
+                    brainstormId,
                     roundsTime: '5:00',
                     running: false,
                     leader: user.uid,
@@ -52,6 +54,11 @@ export const actions = {
                     currentRound: 0,
                     brainstormDate: firebase.firestore.FieldValue.serverTimestamp()
                 })
+
+            commit('SET_BRAINSTORM_STATE', {
+                field: 'brainstormId',
+                data: brainstormId
+            })
 
             success = true
         } catch (error) {
@@ -63,11 +70,16 @@ export const actions = {
         }
     },
 
-    async joinInBrainstorm({ dispatch }, codeRoom) {
+    async joinInBrainstorm({ dispatch, commit }, codeRoom) {
         if (!codeRoom) return
 
         codeRoom = codeRoom.trim()
         codeRoom = codeRoom.toUpperCase()
+
+        commit('SET_BRAINSTORM_STATE', {
+            field: 'brainstormId',
+            data: codeRoom
+        })
 
         const brainstorm = this.$firebase
             .firestore()
@@ -113,8 +125,7 @@ export const actions = {
     },
 
     verifyRunningAndStop({ getters, rootGetters }) {
-        const { running, currentRound } = getters['getBrainstorm']
-        const { brainstormId } = rootGetters['brainstormRoom/getBrainstormInfos']
+        const { running, currentRound, brainstormId } = getters['getBrainstorm']
         const currentRouteName = this.$router.currentRoute.name
 
         if (!running && currentRouteName !== 'brainstorm-id') {
@@ -128,7 +139,17 @@ export const actions = {
 
     async getBrainstormInfos({ commit, getters }, localListener) {
         try {
-            const brainstormId = getters['getBrainstormInfos'].brainstormId
+            let brainstormId = getters['getBrainstorm'].brainstormId
+
+            if (this.$router.history.current.params.id &&
+                !brainstormId) {
+                brainstormId = this.$router.history.current.params.id
+
+                commit('SET_BRAINSTORM_STATE', {
+                    field: 'brainstormId',
+                    data: brainstormId
+                })
+            }
 
             const db = this.$firebase.firestore()
             const listenerInfos = db.collection('brainstorms')
@@ -156,7 +177,10 @@ export const actions = {
 
 export const getters = {
     getBrainstorm: state => state,
+    getBrainstormId: state => state.brainstormId,
     getListGuests: state => state.listGuests,
     leader: state => state.leader,
-    getListFinishWriteIdeas: state => state.listFinishWriteIdeas
+    getListFinishWriteIdeas: state => state.listFinishWriteIdeas,
+    getRunning: state => state.running,
+    getCurrentRound: state => state.currentRound
 }

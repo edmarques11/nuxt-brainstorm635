@@ -34,8 +34,7 @@ export default {
     computed: {
         running: {
             get() {
-                return this.$store.getters['brainstormRoom/getBrainstormInfos']
-                    .running
+                return this.$store.getters['brainstorm/getRunning']
             },
             set(newVal) {
                 this.$store.commit('brainstorm/SET_BRAINSTORM_STATE', {
@@ -48,25 +47,18 @@ export default {
             return this.$store.getters['brainstorm/leader'] === this.$store.getters['user/getUid']
         },
         currentRound() {
-            return this.$store.getters['brainstormRoom/getBrainstormInfos']
-                .currentRound
+            return this.$store.getters['brainstorm/getCurrentRound']
         },
         brainstormId() {
-            return this.$store.getters['brainstormRoom/getBrainstormInfos']
-                .brainstormId
+            return this.$store.getters['brainstorm/getBrainstormId']
         }
     },
 
     async created() {
         try {
-            this.$store.commit('brainstormRoom/SET_STATE', {
-                field: 'brainstormId',
-                data: this.$route.params.id
-            })
-
             await this.$store.dispatch('brainstorm/verifyRunningAndStop')
 
-            await this.getBrainstormInfo()
+            await this.$store.dispatch('brainstorm/getBrainstormInfos', 'RoomSale')
 
             await this.$store.dispatch('user/setUserInfoState')
         } catch (error) {
@@ -75,13 +67,6 @@ export default {
     },
 
     methods: {
-        async getBrainstormInfo() {
-            try {
-                await this.$store.dispatch('brainstormRoom/getRoomInfos')
-            } catch (error) {
-                console.error(error)
-            }
-        },
         async startBrainstorm() {
             let success = false
             try {

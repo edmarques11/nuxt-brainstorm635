@@ -4,9 +4,9 @@
             <v-container class="infos-brainstorm">
                 <v-card>
                     <v-row class="px-2">
-                        <v-col>{{ time }}</v-col>
-                        <v-col>round</v-col>
-                        <v-col>tema</v-col>
+                        <v-col class="text-center">{{ description }}</v-col>
+                        <v-col class="text-center">Round {{ currentRound }}</v-col>
+                        <v-col class="text-center">{{ time }}</v-col>
                     </v-row>
                 </v-card>
             </v-container>
@@ -33,8 +33,7 @@ export default {
     computed: {
         running: {
             get() {
-                return this.$store.getters['writeIdeas/getBrainstormInfos']
-                    .running
+                return this.$store.getters['brainstorm/getRunning']
             },
             set(newVal) {
                 this.$store.commit(
@@ -46,13 +45,21 @@ export default {
                 )
             }
         },
+        description() {
+            return this.$store.getters['brainstorm/getBrainstorm'].description
+        },
+        currentRound() {
+            return this.$store.getters['brainstorm/getCurrentRound']
+        },
         time() {
             return this.clock.getTime()
         }
     },
 
-    created() {
+    async created() {
         try {
+            await this.$store.dispatch('brainstorm/getBrainstormInfos', 'writeIdeas')
+
             this.clock = new this.$clock()
             this.clock.startTimer()
         } catch (error) {
@@ -70,6 +77,7 @@ export default {
 
     beforeDestroy() {
         this.clock.stopTimer()
+        this.$store.dispatch('listeners/stopListener', 'writeIdeas')
     }
 }
 </script>
