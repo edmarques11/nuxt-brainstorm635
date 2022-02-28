@@ -1,8 +1,35 @@
 import firebase from 'firebase/app'
 import { codeGenerator, pushToBrainstorm } from '~/libs/helpFunctions'
 
+export const state = () => ({
+    brainstormDate: '',
+    brainstormId: '',
+    concluded: false,
+    currentRound: 0,
+    description: '',
+    hourOfStartRound: '',
+    leader: '',
+    listFinishWriteIdeas: [],
+    listGuests: [{
+        displayName: '',
+        photoURL: '',
+        uid: ''
+    }],
+    roundsTime: '5:00',
+    running: false
+})
+
+export const mutations = {
+    SET_BRAINSTORM_STATE(state, { field, data }) {
+        state[field] = data
+    },
+    SET_STATE(state, payload) {
+        Object.assign(state, payload)
+    }
+}
+
 export const actions = {
-    async createNewBrainstorm({ dispatch }) {
+    async createNewBrainstorm({ dispatch, commit }) {
         let success = false
         const brainstormId = codeGenerator(6)
         try {
@@ -18,6 +45,7 @@ export const actions = {
                 .collection('brainstorms')
                 .doc(brainstormId.toString())
                 .set({
+                    brainstormId,
                     roundsTime: '5:00',
                     running: false,
                     leader: user.uid,
@@ -26,6 +54,11 @@ export const actions = {
                     currentRound: 0,
                     brainstormDate: firebase.firestore.FieldValue.serverTimestamp()
                 })
+
+            commit('SET_BRAINSTORM_STATE', {
+                field: 'brainstormId',
+                data: brainstormId
+            })
 
             success = true
         } catch (error) {
@@ -37,11 +70,16 @@ export const actions = {
         }
     },
 
-    async joinInBrainstorm({ dispatch }, codeRoom) {
+    async joinInBrainstorm({ dispatch, commit }, codeRoom) {
         if (!codeRoom) return
 
         codeRoom = codeRoom.trim()
         codeRoom = codeRoom.toUpperCase()
+
+        commit('SET_BRAINSTORM_STATE', {
+            field: 'brainstormId',
+            data: codeRoom
+        })
 
         const brainstorm = this.$firebase
             .firestore()
@@ -86,12 +124,9 @@ export const actions = {
         }
     },
 
-    verifyRunningAndStop({ rootGetters }) {
-        // const stoped = rootGetters['aindaImplementar']
-        const { running, brainstormId, currentRound } = rootGetters['brainstormRoom/getBrainstormInfos']
+    verifyRunningAndStop({ getters, rootGetters }) {
+        const { running, currentRound, brainstormId } = getters['getBrainstorm']
         const currentRouteName = this.$router.currentRoute.name
-
-        // if (stoped) return
 
         if (!running && currentRouteName !== 'brainstorm-id') {
             return this.$router.push({ path: `/brainstorm/${brainstormId}` })
@@ -100,5 +135,52 @@ export const actions = {
         if (running && currentRouteName !== 'brainstorm-id-roundId') {
             return this.$router.push({ path: `/brainstorm/${brainstormId}/round${currentRound}` })
         }
-    }
+    },
+
+    async getBrainstormInfos({ commit, getters }, localListener) {
+        try {
+            let brainstormId = getters['getBrainstorm'].brainstormId
+
+            if (this.$router.history.current.params.id &&
+                !brainstormId) {
+                brainstormId = this.$router.history.current.params.id
+
+                commit('SET_BRAINSTORM_STATE', {
+                    field: 'brainstormId',
+                    data: brainstormId
+                })
+            }
+
+            const db = this.$firebase.firestore()
+            const listenerInfos = db.collection('brainstorms')
+                .doc(brainstormId)
+                .onSnapshot(doc => {
+                    if (!doc.exists) {
+                        listenerInfos()
+                        throw new Error('The Brainstorm not exist!')
+                    }
+
+                    const data = doc.data()
+
+                    commit('brainstorm/SET_STATE', data, { root: true })
+                })
+
+            commit('listeners/ADD_LISTENER', {
+                name: localListener,
+                listener: listenerInfos
+            }, { root: true })
+        } catch (error) {
+            throw error
+        }
+    },
+}
+
+export const getters = {
+    getBrainstorm: state => state,
+    getBrainstormId: state => state.brainstormId,
+    getListGuests: state => state.listGuests,
+    leader: state => state.leader,
+    getListFinishWriteIdeas: state => state.listFinishWriteIdeas,
+    getRunning: state => state.running,
+    getCurrentRound: state => state.currentRound
 }

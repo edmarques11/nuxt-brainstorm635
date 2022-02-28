@@ -5,7 +5,7 @@
         </v-row>
         <v-row justify="center">
             <v-col cols="10">
-                <BrainstormInfo />
+                <BrainstormInfo :isLeader="isLeader" :brainstormId="brainstormId" />
             </v-col>
         </v-row>
         <v-row justify="center">
@@ -34,63 +34,47 @@ export default {
     computed: {
         running: {
             get() {
-                return this.$store.getters['brainstormRoom/getBrainstormInfos']
-                    .running
+                return this.$store.getters['brainstorm/getRunning']
             },
             set(newVal) {
-                this.$store.commit(
-                    'brainstormRoom/SET_BRAINSTORM_INFOS_FIELD',
-                    {
-                        field: 'running',
-                        value: newVal
-                    }
-                )
+                this.$store.commit('brainstorm/SET_BRAINSTORM_STATE', {
+                    field: 'running',
+                    data: newVal
+                })
             }
         },
         isLeader() {
-            return this.$store.getters['brainstormRoom/getBrainstormInfos']
-                .isLeader
+            return this.$store.getters['brainstorm/leader'] === this.$store.getters['user/getUid']
         },
         currentRound() {
-            return this.$store.getters['brainstormRoom/getBrainstormInfos']
-                .currentRound
+            return this.$store.getters['brainstorm/getCurrentRound']
         },
         brainstormId() {
-            return this.$store.getters['brainstormRoom/getBrainstormInfos']
-                .brainstormId
+            return this.$store.getters['brainstorm/getBrainstormId']
         }
     },
 
-    created() {
-        this.$store.commit('brainstormRoom/SET_BRAINSTORM_INFOS_FIELD', {
-            field: 'brainstormId',
-            value: this.$route.params.id
-        })
+    async created() {
+        try {
+            await this.$store.dispatch('brainstorm/verifyRunningAndStop')
 
-        this.$store.dispatch('verifyRunningAndStop')
+            await this.$store.dispatch('brainstorm/getBrainstormInfos', 'RoomSale')
 
-        this.getBrainstormInfo()
+            await this.$store.dispatch('user/setUserInfoState')
+        } catch (error) {
+            console.error(error)
+        }
     },
 
     methods: {
-        async getBrainstormInfo() {
-            try {
-                await this.$store.dispatch('brainstormRoom/getRoomInfos')
-            } catch (error) {
-                console.error(error)
-            }
-        },
         async startBrainstorm() {
             let success = false
             try {
                 if (this.currentRound < 1) {
-                    this.$store.commit(
-                        'brainstormRoom/SET_BRAINSTORM_INFOS_FIELD',
-                        {
-                            field: 'currentRound',
-                            value: 1
-                        }
-                    )
+                    this.$store.commit('brainstorm/SET_BRAINSTORM_STATE', {
+                        field: 'currentRound',
+                        data: 1
+                    })
                 }
                 await this.$store.dispatch('brainstormRoom/saveInfos')
                 await this.$store.dispatch('brainstormRoom/createSheet')
@@ -116,7 +100,7 @@ export default {
         }
     },
 
-    destroyed() {
+    beforeDestroy() {
         this.$store.dispatch('listeners/stopListener', 'listenerGetRoomInfos')
     }
 }

@@ -19,9 +19,9 @@
             </v-col>
         </v-app-bar>
         <v-main>
-            <v-container>
+            <v-layout fill-height class="ma-4">
                 <Nuxt />
-            </v-container>
+            </v-layout>
         </v-main>
         <v-footer :absolute="true" app>
             <span>&copy; {{ new Date().getFullYear() }}</span>

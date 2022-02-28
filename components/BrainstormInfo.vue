@@ -36,45 +36,47 @@
 export default {
     name: 'BrainstormInfo',
 
+    props: {
+        isLeader: {
+            type: Boolean,
+            default: false
+        },
+        brainstormId: {
+            type: String,
+            default: ''
+        },
+    },
+
     computed: {
-        brainstormId() {
-            return this.$store.getters['brainstormRoom/getBrainstormInfos']
-                .brainstormId
-        },
-        isLeader() {
-            return this.$store.getters['brainstormRoom/getBrainstormInfos']
-                .isLeader
-        },
         countMembers() {
-            return this.$store.getters['brainstormRoom/getBrainstormInfos']
-                .listGuests.length
+            return this.$store.getters['brainstorm/getListGuests'].length
         },
         description: {
             get() {
-                return this.$store.getters['brainstormRoom/getBrainstormInfos']
+                return this.$store.getters['brainstorm/getBrainstorm']
                     .description
             },
             set(newVal) {
                 this.$store.commit(
-                    'brainstormRoom/SET_BRAINSTORM_INFOS_FIELD',
+                    'brainstorm/SET_BRAINSTORM_STATE',
                     {
                         field: 'description',
-                        value: newVal
+                        data: newVal
                     }
                 )
             }
         },
         roundsTime: {
             get() {
-                return this.$store.getters['brainstormRoom/getBrainstormInfos']
+                return this.$store.getters['brainstorm/getBrainstorm']
                     .roundsTime
             },
             set(newVal) {
                 this.$store.commit(
-                    'brainstormRoom/SET_BRAINSTORM_INFOS_FIELD',
+                    'brainstorm/SET_BRAINSTORM_STATE',
                     {
                         field: 'roundsTime',
-                        value: newVal
+                        data: newVal
                     }
                 )
             }

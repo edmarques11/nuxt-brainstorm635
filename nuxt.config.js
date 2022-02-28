@@ -24,9 +24,10 @@ export default {
 
     // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
     plugins: [
-        '~/plugins/firebase',
-        '~/plugins/vue-cookies',
-        '~/plugins/auth-access',
+        { src: '~/plugins/firebase' },
+        { src: '~/plugins/vue-cookies' },
+        { src: '~/plugins/auth-access' },
+        { src: '~/plugins/clock' },
     ],
 
     // Auto import components: https://go.nuxtjs.dev/config-components

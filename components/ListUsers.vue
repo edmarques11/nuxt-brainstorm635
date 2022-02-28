@@ -6,13 +6,18 @@
                     <v-row>
                         <v-col cols="4" sm="2" md="3">
                             <v-img
-                                max-width="40"
-                                min-width="40"
+                                width="40"
+                                height="40"
                                 :src="user.photoURL"
                                 class="rounded-pill"
                             />
                         </v-col>
-                        <v-col cols="8" sm="10" md="9" class="align-self-center">
+                        <v-col
+                            cols="8"
+                            sm="10"
+                            md="9"
+                            class="align-self-center"
+                        >
                             <span>{{ user.displayName }}</span>
                         </v-col>
                     </v-row>
@@ -28,7 +33,7 @@ export default {
 
     computed: {
         listGuests() {
-            return this.$store.getters['brainstormRoom/getBrainstormInfos']
+            return this.$store.getters['brainstorm/getBrainstorm']
                 .listGuests
         }
     }
