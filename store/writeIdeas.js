@@ -22,6 +22,9 @@ export const state = () => ({
 export const mutations = {
     SET_IDEA(state, { field, data }) {
         Object.assign(state.newIdeas[field], data)
+    },
+    SET_IDEAS(state, payload) {
+        Object.assign(state.newIdeas, payload)
     }
 }
 

@@ -5,7 +5,9 @@
                 <v-card>
                     <v-row class="px-2">
                         <v-col class="text-center">{{ description }}</v-col>
-                        <v-col class="text-center">Round {{ currentRound }}</v-col>
+                        <v-col class="text-center"
+                            >Round {{ currentRound }}</v-col
+                        >
                         <v-col class="text-center">{{ time }}</v-col>
                     </v-row>
                 </v-card>
@@ -36,13 +38,10 @@ export default {
                 return this.$store.getters['brainstorm/getRunning']
             },
             set(newVal) {
-                this.$store.commit(
-                    'brainstorm/SET_BRAINSTORM_STATE',
-                    {
-                        field: 'running',
-                        data: newVal
-                    }
-                )
+                this.$store.commit('brainstorm/SET_BRAINSTORM_STATE', {
+                    field: 'running',
+                    data: newVal
+                })
             }
         },
         description() {
@@ -58,7 +57,10 @@ export default {
 
     async created() {
         try {
-            await this.$store.dispatch('brainstorm/getBrainstormInfos', 'writeIdeas')
+            await this.$store.dispatch(
+                'brainstorm/getBrainstormInfos',
+                'writeIdeas'
+            )
 
             this.clock = new this.$clock()
             this.clock.startTimer()

@@ -1,14 +1,31 @@
 <template>
-    <v-textarea
-        outlined
-        counter="250"
-        maxlength="250"
-    ></v-textarea>
+    <div>
+        <v-textarea
+            v-model="value.description"
+            outlined
+            counter="250"
+            maxlength="250"
+        />
+        <v-row no-gutters justify="center">
+            <v-select outlined dense class="col-4" />
+        </v-row>
+    </div>
 </template>
 
 <script>
 export default {
-    name: 'IdeaAreaInput'
+    name: 'IdeaAreaInput',
+
+    props: {
+        value: {
+            type: Object,
+            default: () => ({
+                description: '',
+                id: '',
+                idContinueIdea: ''
+            })
+        }
+    }
 }
 </script>
 
