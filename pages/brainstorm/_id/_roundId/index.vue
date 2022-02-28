@@ -41,7 +41,7 @@ export default {
                     'brainstormSET_BRAINSTORM_STATE',
                     {
                         field: 'running',
-                        value: newVal
+                        data: newVal
                     }
                 )
             }

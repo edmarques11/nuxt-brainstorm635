@@ -36,15 +36,18 @@
 export default {
     name: 'BrainstormInfo',
 
+    props: {
+        isLeader: {
+            type: Boolean,
+            default: false
+        },
+        brainstormId: {
+            type: String,
+            default: ''
+        },
+    },
+
     computed: {
-        brainstormId() {
-            return this.$store.getters['brainstormRoom/getBrainstormInfos']
-                .brainstormId
-        },
-        isLeader() {
-            return this.$store.getters['brainstormRoom/getBrainstormInfos']
-                .isLeader
-        },
         countMembers() {
             return this.$store.getters['brainstormRoom/getBrainstormInfos']
                 .listGuests.length
@@ -59,7 +62,7 @@ export default {
                     'brainstorm/SET_BRAINSTORM_STATE',
                     {
                         field: 'description',
-                        value: newVal
+                        data: newVal
                     }
                 )
             }
@@ -74,7 +77,7 @@ export default {
                     'brainstorm/SET_BRAINSTORM_STATE',
                     {
                         field: 'roundsTime',
-                        value: newVal
+                        data: newVal
                     }
                 )
             }

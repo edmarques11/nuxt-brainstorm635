@@ -5,7 +5,7 @@
         </v-row>
         <v-row justify="center">
             <v-col cols="10">
-                <BrainstormInfo />
+                <BrainstormInfo :isLeader="isLeader" :brainstormId="brainstormId" />
             </v-col>
         </v-row>
         <v-row justify="center">
@@ -88,7 +88,7 @@ export default {
                 if (this.currentRound < 1) {
                     this.$store.commit('brainstorm/SET_BRAINSTORM_STATE', {
                         field: 'currentRound',
-                        value: 1
+                        data: 1
                     })
                 }
                 await this.$store.dispatch('brainstormRoom/saveInfos')
@@ -115,7 +115,7 @@ export default {
         }
     },
 
-    destroyed() {
+    beforeDestroy() {
         this.$store.dispatch('listeners/stopListener', 'listenerGetRoomInfos')
     }
 }

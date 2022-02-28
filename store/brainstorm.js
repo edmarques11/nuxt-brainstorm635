@@ -15,7 +15,7 @@ export const state = () => ({
         uid: ''
     }],
     roundsTime: '5:00',
-    runing: false
+    running: false
 })
 
 export const mutations = {
