@@ -81,9 +81,15 @@ export default {
     },
 
     watch: {
-        running(newVal) {
+        async running(newVal) {
             if (!newVal) {
-                this.$store.dispatch('brainstorm/verifyRunningAndStop')
+                try {
+                    await this.$store.dispatch('writeIdeas/saveNewIdeas')
+
+                    this.$store.dispatch('brainstorm/verifyRunningAndStop')
+                } catch (error) {
+                    console.error(error)
+                }
             }
         }
     },

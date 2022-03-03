@@ -138,6 +138,8 @@ export const actions = {
     },
 
     async getBrainstormInfos({ commit, getters }, localListener) {
+        if (process.server) return
+
         try {
             let brainstormId = getters['getBrainstorm'].brainstormId
 
