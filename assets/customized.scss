@@ -1,3 +1,76 @@
+
+@import url('https://fonts.googleapis.com/css2?family=Encode+Sans+Expanded&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Encode+Sans+Expanded:wght@400;600&display=swap');
+@import './variables.scss';
+
+* {
+    box-sizing: border-box;
+}
+
+html {
+    margin: 0 auto;
+    font-size: 16px;
+    background-color: #ffffff;
+    font-family: 'Encode Sans Expanded', sans-serif !important;
+}
+
+::-webkit-scrollbar {
+    width: 8px;
+    background: #fff!important;
+}
+  
+::-webkit-scrollbar-thumb {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    border-radius: 4px;
+    background: #cdcdcd;
+    opacity: 0;
+    cursor: default;
+    outline: none;
+    z-index: 1;
+    will-change: transform;
+}
+  
+::-webkit-scrollbar-thumb:not(:hover) ::-webkit-scrollbar-thumb{
+    transition: opacity .1s .5s;
+}
+
+.page-tittle::before {
+    content: "";
+    position: absolute;
+    display: block;
+    width: 120px;
+    height: 1px;
+    background: #ddd;
+    bottom: 1px;
+    left: calc(50% - 60px);
+}
+  
+/* The next 2 selectors are for underlined for h3 or title page */
+.page-tittle {
+    text-transform: uppercase;
+    text-align: center;
+    font-weight: 600;
+    letter-spacing: 1px;
+    position: relative;
+    padding-bottom: 15px;
+    padding-top: 15px;
+}
+  
+.page-tittle::after {
+    content: "";
+    position: absolute;
+    display: block;
+    width: 40px;
+    height: 3px;
+    background: $primary;
+    bottom: 0;
+    left: calc(50% - 20px);
+}
+
+
 .css-input-border {
     padding-top: 0 !important;
     margin-top: 0 !important;
@@ -28,4 +101,9 @@
     flex-direction: row;
     align-items: center;
     justify-content: center;
+}
+
+.v-btn {
+    text-transform: none !important;
+    font-size: 1.1rem !important;
 }

@@ -12,7 +12,7 @@ export default {
             { name: 'format-detection', content: 'telephone=no' }
         ],
         link: [
-            { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }
+            { rel: 'icon', type: 'image/x-icon', href: '/img/logo-transparent.png' }
         ]
     },
 
@@ -59,9 +59,9 @@ export default {
             light: true,
             themes: {
                 light: {
-                    primary: '#4e4d4d',
+                    primary: '#3bb5e0',
                     accent: colors.grey.lighten3,
-                    secondary: '#3bb5e0',
+                    secondary: '#4e4d4d',
                     info: colors.teal.darken1,
                     warning: colors.amber.base,
                     error: colors.deepOrange.accent4,
