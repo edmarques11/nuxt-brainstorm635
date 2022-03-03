@@ -35,22 +35,24 @@ export const mutations = {
 }
 
 export const actions = {
-    async saveNewIdeas({ getters, rootGetters, dispatch }) {
+    async saveNewIdeas({ getters, rootGetters, dispatch }, roundSaveIdeas) {
         try {
             const indexSheet = getters['getIndexSheet']
-            const organizeIdeasForSave = getters['organizeIdeasForSave']
-            const { currentRound } = rootGetters['brainstorm/getBrainstorm']
+            const { currentRound, brainstormId } = rootGetters['brainstorm/getBrainstorm']
+
+            roundSaveIdeas = roundSaveIdeas || currentRound
 
             const currentUser = await dispatch('user/getUserInfo', null, { root: true })
 
-            const organizedIdeas = await organizeIdeasForSave(currentUser)
+            const organizedIdeas = await dispatch('organizeIdeasForSave', currentUser)
+
             organizedIdeas.owner = currentUser.uid
 
             if (Object.keys(organizedIdeas).length !== 0 && indexSheet >= 0) {
                 const sheet = 'sheet' + (indexSheet + 1)
-                const dataSheet = { [currentRound]: organizedIdeas }
+                const dataSheet = { [`round${roundSaveIdeas}`]: organizedIdeas }
 
-                const database = this.$firebase.firestore().collection('brainstorms').doc(this.brainstormId)
+                const database = this.$firebase.firestore().collection('brainstorms').doc(brainstormId)
 
                 await database.collection('sheets').doc(sheet).set(dataSheet, { merge: true })
             }
@@ -81,24 +83,20 @@ export const actions = {
             throw error
         }
     },
-}
 
-export const getters = {
-    getNewIdeas: state => state.newIdeas,
-    getOldIdeas: state => state.oldIdeas,
-    getIndexSheet: state => state.indexSheet,
-    organizeIdeasForSave: (state, getters, rootState, rootGetters) => (currentUser) => {
+    organizeIdeasForSave({ getters, rootGetters, commit }, currentUser) {
         try {
-            const newIdeas = state.newIdeas
+            const newIdeas = JSON.parse(JSON.stringify(getters['getNewIdeas']))
             const listGuests = rootGetters['brainstorm/getListGuests']
 
-            for (const campo in state.newIdeas) {
+            for (const campo in newIdeas) {
                 if (Object.prototype.hasOwnProperty.call(newIdeas[campo], 'id')) {
                     newIdeas[campo].id = codeGenerator(8)
-
                     newIdeas[campo].color = getColor(currentUser.uid, listGuests)
                 }
-                if (!newIdeas[campo].description) { delete newIdeas[campo] }
+                if (!newIdeas[campo].description) {
+                    delete newIdeas[campo]
+                }
             }
 
             const organizedIdeas = {}
@@ -115,4 +113,10 @@ export const getters = {
             throw error
         }
     }
+}
+
+export const getters = {
+    getNewIdeas: state => state.newIdeas,
+    getOldIdeas: state => state.oldIdeas,
+    getIndexSheet: state => state.indexSheet
 }

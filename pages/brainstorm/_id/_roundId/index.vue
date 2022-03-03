@@ -21,6 +21,8 @@
 
 <script>
 import RowWriteIdeas from '~/components/writeIdeas/RowWriteIdeas.vue'
+import { mapActions } from 'vuex'
+
 export default {
     name: 'WriteIdeas',
 
@@ -57,10 +59,7 @@ export default {
 
     async created() {
         try {
-            await this.$store.dispatch(
-                'brainstorm/getBrainstormInfos',
-                'writeIdeas'
-            )
+            await this.getBrainstormInfos('writeIdeas')
         } catch (error) {
             console.error(error)
         }
@@ -68,15 +67,45 @@ export default {
 
     mounted() {
         try {
-            const { roundsTime, hourOfStartRound } =
-                this.$store.getters['brainstorm/getBrainstorm']
+            this.chooseSheet()
 
-            this.$store.dispatch('writeIdeas/chooseSheet')
-
-            this.clock = new this.$clock()
-            this.clock.startTimer(roundsTime, hourOfStartRound)
+            this.startTimer()
         } catch (error) {
             console.error(error)
+        }
+    },
+
+    methods: {
+        ...mapActions({
+            saveNewIdeas: 'writeIdeas/saveNewIdeas',
+            verifyRunningAndStop: 'brainstorm/verifyRunningAndStop',
+            stopListener: 'listeners/stopListener',
+            getBrainstormInfos: 'brainstorm/getBrainstormInfos',
+            chooseSheet: 'writeIdeas/chooseSheet'
+        }),
+
+        startTimer() {
+            try {
+                const { roundsTime, hourOfStartRound } =
+                    this.$store.getters['brainstorm/getBrainstorm']
+
+                this.clock = new this.$clock()
+                this.clock.startTimer(roundsTime, hourOfStartRound)
+            } catch (error) {
+                console.error(error)
+            }
+        },
+
+        async initNewRound(roundSaveIdeas) {
+            try {
+                this.clock.stopTimer()
+
+                await this.saveNewIdeas(roundSaveIdeas)
+
+                this.startTimer()
+            } catch (error) {
+                console.error(error)
+            }
         }
     },
 
@@ -84,19 +113,23 @@ export default {
         async running(newVal) {
             if (!newVal) {
                 try {
-                    await this.$store.dispatch('writeIdeas/saveNewIdeas')
+                    await this.saveNewIdeas()
 
-                    this.$store.dispatch('brainstorm/verifyRunningAndStop')
+                    this.verifyRunningAndStop()
                 } catch (error) {
                     console.error(error)
                 }
             }
+        },
+
+        currentRound(newVal, oldVal) {
+            this.initNewRound(oldVal)
         }
     },
 
     beforeDestroy() {
         this.clock.stopTimer()
-        this.$store.dispatch('listeners/stopListener', 'writeIdeas')
+        this.stopListener('writeIdeas')
     }
 }
 </script>
