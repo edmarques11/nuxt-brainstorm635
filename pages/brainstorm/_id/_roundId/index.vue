@@ -12,7 +12,10 @@
                     </v-row>
                 </v-card>
             </v-container>
-            <v-container class="mt-8">
+            <v-container class="mt-10">
+                <GridOldIdeas :oldIdeas="oldIdeas" />
+            </v-container>
+            <v-container>
                 <RowWriteIdeas />
             </v-container>
         </v-col>
@@ -21,20 +24,28 @@
 
 <script>
 import RowWriteIdeas from '~/components/writeIdeas/RowWriteIdeas.vue'
-import { mapActions } from 'vuex'
+import GridOldIdeas from '~/components/writeIdeas/GridOldIdeas.vue'
+
+import { mapActions, mapGetters } from 'vuex'
 
 export default {
     name: 'WriteIdeas',
 
-    components: { RowWriteIdeas },
+    components: { RowWriteIdeas, GridOldIdeas },
 
     data: () => ({
         clock: {
-            getTime: () => '0:0'
+            getTime: () => '0:0',
+            stopTimer: () => {}
         }
     }),
 
     computed: {
+        ...mapGetters({
+            currentRound: 'brainstorm/getCurrentRound',
+            brainstormId: 'brainstorm/getBrainstormId',
+            oldIdeas: 'writeIdeas/getOldIdeas'
+        }),
         running: {
             get() {
                 return this.$store.getters['brainstorm/getRunning']
@@ -49,9 +60,6 @@ export default {
         description() {
             return this.$store.getters['brainstorm/getBrainstorm'].description
         },
-        currentRound() {
-            return this.$store.getters['brainstorm/getCurrentRound']
-        },
         time() {
             return this.clock.getTime()
         }
@@ -65,23 +73,14 @@ export default {
         }
     },
 
-    mounted() {
-        try {
-            this.chooseSheet()
-
-            this.startTimer()
-        } catch (error) {
-            console.error(error)
-        }
-    },
-
     methods: {
         ...mapActions({
             saveNewIdeas: 'writeIdeas/saveNewIdeas',
             verifyRunningAndStop: 'brainstorm/verifyRunningAndStop',
             stopListener: 'listeners/stopListener',
             getBrainstormInfos: 'brainstorm/getBrainstormInfos',
-            chooseSheet: 'writeIdeas/chooseSheet'
+            chooseSheet: 'writeIdeas/chooseSheet',
+            getOldIdeas: 'writeIdeas/getOldIdeas'
         }),
 
         startTimer() {
@@ -98,6 +97,18 @@ export default {
 
         async initNewRound(roundSaveIdeas) {
             try {
+                await this.chooseSheet()
+                await this.getOldIdeas()
+
+                if (
+                    this.$route.params.roundId !==
+                    'round' + this.currentRound
+                ) {
+                    this.$router.replace({
+                        path: `/brainstorm/${this.brainstormId}/round${this.currentRound}`
+                    })
+                }
+
                 this.clock.stopTimer()
 
                 await this.saveNewIdeas(roundSaveIdeas)

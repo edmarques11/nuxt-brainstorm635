@@ -19,7 +19,7 @@ export const state = () => ({
             idContinueIdea: ''
         }
     },
-    oldIdeas: {}
+    oldIdeas: []
 })
 
 export const mutations = {
@@ -31,6 +31,9 @@ export const mutations = {
     },
     SET_INDEX_SHEET(state, payload) {
         state.indexSheet = payload
+    },
+    SET_OLD_IDEAS(state, payload) {
+        state.oldIdeas = payload
     }
 }
 
@@ -84,7 +87,7 @@ export const actions = {
         }
     },
 
-    organizeIdeasForSave({ getters, rootGetters, commit }, currentUser) {
+    organizeIdeasForSave({ getters, rootGetters }, currentUser) {
         try {
             const newIdeas = JSON.parse(JSON.stringify(getters['getNewIdeas']))
             const listGuests = rootGetters['brainstorm/getListGuests']
@@ -109,6 +112,46 @@ export const actions = {
                 }
             }
             return organizedIdeas
+        } catch (error) {
+            throw error
+        }
+    },
+
+    async getOldIdeas({ commit, getters, rootGetters }) {
+        try {
+            const indexSheet = getters['getIndexSheet']
+            const { brainstormId, currentRound } = rootGetters['brainstorm/getBrainstorm']
+
+            if (currentRound < 2) return
+
+            const sheet = 'sheet' + (indexSheet + 1)
+
+            const docSheet = this.$firebase.firestore()
+                .collection('brainstorms')
+                .doc(brainstormId)
+                .collection('sheets').doc(sheet)
+
+            const doc = await docSheet.get()
+            const data = doc.data()
+
+            delete data.owner
+
+            const organizedIdeas = []
+            for (const index in Object.keys(data)) {
+                const round = data[`round${Number(index) + 1}`]
+
+                delete round.owner
+
+                const ideas = []
+                for (const idx in Object.keys(round)) {
+                    ideas.push(round[`idea${Number(idx) + 1}`])
+                }
+
+                if (ideas.length > 0)
+                    organizedIdeas.push(ideas)
+            }
+
+            commit('SET_OLD_IDEAS', organizedIdeas)
         } catch (error) {
             throw error
         }
