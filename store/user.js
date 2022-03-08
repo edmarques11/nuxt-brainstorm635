@@ -1,4 +1,4 @@
-import { getCurrentUserInfo } from "~/libs/helpFunctions"
+import { getCurrentUserInfo } from '~/libs/helpFunctions'
 
 export const state = () => ({
     displayName: '',

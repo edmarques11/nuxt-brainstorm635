@@ -1,22 +1,25 @@
 <template>
     <v-container>
         <v-row justify="center">
-            <h1>BRAINSTORM</h1>
+            <h2 class="page-tittle tittle">BRAINSTORM</h2>
         </v-row>
-        <v-row justify="center">
+        <v-row justify="center" class="mt-8">
             <v-col cols="10">
                 <BrainstormInfo :isLeader="isLeader" :brainstormId="brainstormId" />
             </v-col>
         </v-row>
         <v-row justify="center">
-            <v-col cols="12" sm="5" class="text-left">
+            <v-col cols="12" sm="5" class="text-left pl-0">
                 <ListUsers />
             </v-col>
             <v-col cols="12" sm="5" class="text-center align-self-center">
                 <v-btn
-                    color="secondary"
+                    color="primary"
                     outlined
-                    class="rounded-pill"
+                    listGuests
+                    large
+                    width="150"
+                    class="rounded-pill start-btn"
                     :disabled="!isLeader"
                     @click="running = true"
                 >
@@ -105,3 +108,13 @@ export default {
     }
 }
 </script>
+
+<style scoped lang="scss">
+@import '@/assets/variables.scss';
+
+.start-btn:hover {
+    color: #fff !important;
+    background-color: $primary;
+    border-color: $primary;
+}
+</style>
