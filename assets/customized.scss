@@ -7,34 +7,8 @@
     box-sizing: border-box;
 }
 
-html {
-    margin: 0 auto;
-    font-size: 16px;
-    background-color: #ffffff;
-    font-family: 'Encode Sans Expanded', sans-serif !important;
-}
-
-::-webkit-scrollbar {
-    width: 8px;
-    background: #fff!important;
-}
-  
-::-webkit-scrollbar-thumb {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    border-radius: 4px;
-    background: #cdcdcd;
-    opacity: 0;
-    cursor: default;
-    outline: none;
-    z-index: 1;
-    will-change: transform;
-}
-  
-::-webkit-scrollbar-thumb:not(:hover) ::-webkit-scrollbar-thumb{
-    transition: opacity .1s .5s;
+.tittle {
+    color: rgba(0,0,0,.7);
 }
 
 .page-tittle::before {

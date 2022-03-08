@@ -1,0 +1,33 @@
+@import url('https://fonts.googleapis.com/css2?family=Encode+Sans+Expanded&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Encode+Sans+Expanded:wght@400;600&display=swap');
+
+body {
+  margin: 0 auto !important;
+  font-size: 16px !important;
+  background-color: #ffffff;
+  font-family: 'Encode Sans Expanded', sans-serif !important;
+  letter-spacing: .5px;
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+  background: #fff!important;
+}
+
+::-webkit-scrollbar-thumb {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  border-radius: 4px;
+  background: #cdcdcd;
+  opacity: 0;
+  cursor: default;
+  outline: none;
+  z-index: 1;
+  will-change: transform;
+}
+
+::-webkit-scrollbar-thumb:not(:hover) ::-webkit-scrollbar-thumb{
+  transition: opacity .1s .5s;
+}

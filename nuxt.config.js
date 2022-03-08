@@ -18,7 +18,7 @@ export default {
 
     // Global CSS: https://go.nuxtjs.dev/config-css
     css: [
-        '~/assets/vuetify.css',
+        '~/assets/main.css',
         '~/assets/customized.scss'
     ],
 
@@ -43,7 +43,13 @@ export default {
     modules: [
         // https://go.nuxtjs.dev/pwa
         '@nuxtjs/pwa',
+        'nuxt-sweetalert2',
+        'nuxt-clipboard',
     ],
+
+    clipboard: {
+        autoSetContainer: true,
+    },
 
     // PWA module configuration: https://go.nuxtjs.dev/pwa
     pwa: {

@@ -10,7 +10,7 @@
         </v-row>
         <v-row justify="center" style="height: calc(80% - 100px)">
             <v-col cols="12" class="text-center mt-5">
-                <h1>WELCOME TO BRAINSTORM635</h1>
+                <h1 class="page-tittle tittle">WELCOME TO BRAINSTORM635</h1>
             </v-col>
 
             <v-col cols="12" class="text-center">

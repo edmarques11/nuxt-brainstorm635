@@ -9,7 +9,7 @@
                     v-on="on"
                     class="black--text elevation-0"
                 >
-                    <span>{{ currentUser.displayName }}</span
+                    <span class="name-user">{{ currentUser.displayName }}</span
                     ><v-icon>{{
                         returnIconOpenCloseMenu(attrs['aria-expanded'])
                     }}</v-icon>
@@ -64,8 +64,14 @@ export default {
 }
 </script>
 
-<style scoped>
+<style scoped lang="scss">
+@import '../assets/variables.scss';
+
 .css-item-menu {
     cursor: pointer;
+}
+
+.name-user {
+    color: $secondary;
 }
 </style>
