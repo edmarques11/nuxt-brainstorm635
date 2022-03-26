@@ -155,6 +155,24 @@ export const actions = {
         } catch (error) {
             throw error
         }
+    },
+
+    async changeRound({ rootGetters }) {
+        try {
+            const codeRoom = rootGetters['brainstorm/getBrainstormId']
+            const newRound = Number(rootGetters['brainstorm/getCurrentRound']) + 1
+
+            await this.$firebase
+                .firestore()
+                .collection('brainstorms')
+                .doc(codeRoom)
+                .update({
+                    currentRound: newRound,
+                    hourOfStartRound: new Date()
+                })
+        } catch (err) {
+            console.error(err)
+        }
     }
 }
 

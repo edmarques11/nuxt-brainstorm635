@@ -18,6 +18,16 @@
             <v-container>
                 <RowWriteIdeas />
             </v-container>
+            <v-container v-if="isLeader">
+                <v-row justify="center">
+                    <v-row class="col-12 col-md-4" justify="space-around">
+                        <v-btn color="warning">Pause</v-btn>
+                        <v-btn class="primary" @click="pushNewPage"
+                            >Next round</v-btn
+                        >
+                    </v-row>
+                </v-row>
+            </v-container>
         </v-col>
     </v-layout>
 </template>
@@ -26,7 +36,7 @@
 import RowWriteIdeas from '~/components/writeIdeas/RowWriteIdeas.vue'
 import GridOldIdeas from '~/components/writeIdeas/GridOldIdeas.vue'
 
-import { mapActions, mapGetters } from 'vuex'
+import { mapActions, mapGetters, mapMutations } from 'vuex'
 
 export default {
     name: 'WriteIdeas',
@@ -42,9 +52,12 @@ export default {
 
     computed: {
         ...mapGetters({
-            currentRound: 'brainstorm/getCurrentRound',
             brainstormId: 'brainstorm/getBrainstormId',
-            oldIdeas: 'writeIdeas/getOldIdeas'
+            oldIdeas: 'writeIdeas/getOldIdeas',
+            leader: 'brainstorm/leader',
+            userUid: 'user/getUid',
+            currentRound: 'brainstorm/getCurrentRound',
+            listGuests: 'brainstorm/getListGuests'
         }),
         running: {
             get() {
@@ -57,6 +70,9 @@ export default {
                 })
             }
         },
+        isLeader() {
+            return this.userUid === this.leader
+        },
         description() {
             return this.$store.getters['brainstorm/getBrainstorm'].description
         },
@@ -68,6 +84,8 @@ export default {
     async created() {
         try {
             await this.getBrainstormInfos('writeIdeas')
+            const dataUser = await this.getCurrentUserInfos()
+            this.SET_USER_STATE(dataUser)
         } catch (error) {
             console.error(error)
         }
@@ -75,9 +93,9 @@ export default {
 
     mounted() {
         try {
-            this.initNewRound()
-        } catch (error) {
-            console.error(error)
+            this.startTimer()
+        } catch (err) {
+            console.error(err)
         }
     },
 
@@ -88,7 +106,13 @@ export default {
             stopListener: 'listeners/stopListener',
             getBrainstormInfos: 'brainstorm/getBrainstormInfos',
             chooseSheet: 'writeIdeas/chooseSheet',
-            getOldIdeas: 'writeIdeas/getOldIdeas'
+            getOldIdeas: 'writeIdeas/getOldIdeas',
+            changeRound: 'writeIdeas/changeRound',
+            getCurrentUserInfos: 'user/getUserInfo'
+        }),
+
+        ...mapMutations({
+            SET_USER_STATE: 'user/SET_USER_STATE'
         }),
 
         startTimer() {
@@ -96,7 +120,10 @@ export default {
                 const { roundsTime, hourOfStartRound } =
                     this.$store.getters['brainstorm/getBrainstorm']
 
-                this.clock = new this.$clock(roundsTime, new Date(hourOfStartRound))
+                this.clock = new this.$clock(
+                    roundsTime,
+                    new Date(hourOfStartRound)
+                )
 
                 this.clock.startTimer()
             } catch (error) {
@@ -104,27 +131,61 @@ export default {
             }
         },
 
-        async initNewRound(roundSaveIdeas) {
+        changeRouteRound() {
             try {
-                await this.chooseSheet()
-                await this.getOldIdeas()
+                const pathRound = `/brainstorm/${this.brainstormId}/round${this.currentRound}`
+
+                if (this.$route.path != pathRound) {
+                    this.$router.replace({
+                        path: pathRound
+                    })
+                }
+            } catch (err) {
+                console.error(err)
+            }
+        },
+
+        async initNewRound() {
+            try {
+                await this.saveNewIdeas(this.currentRound)
+                await this.changeRound()
+
+                this.clock.stopTimer()
 
                 if (
                     this.$route.params.roundId !==
                     'round' + this.currentRound
                 ) {
-                    this.$router.replace({
-                        path: `/brainstorm/${this.brainstormId}/round${this.currentRound}`
-                    })
+                    this.changeRouteRound()
                 }
 
-                this.clock.stopTimer()
-
-                await this.saveNewIdeas(roundSaveIdeas)
-
+                await this.chooseSheet()
+                await this.getOldIdeas()
                 this.startTimer()
             } catch (error) {
                 console.error(error)
+            }
+        },
+
+        async setConcludedBrainstorm() {
+            try {
+                this.$router.replace({
+                    path: `/brainstorm/${this.brainstormId}/list-ideas`
+                })
+            } catch (err) {
+                console.error(err)
+            }
+        },
+
+        async pushNewPage() {
+            try {
+                if (this.currentRound < this.listGuests.length) {
+                    await this.initNewRound()
+                } else {
+                    this.setConcludedBrainstorm()
+                }
+            } catch (err) {
+                console.error(err)
             }
         }
     },
@@ -141,9 +202,8 @@ export default {
                 }
             }
         },
-
-        currentRound(newVal, oldVal) {
-            this.initNewRound(oldVal)
+        currentRound() {
+            this.changeRouteRound()
         }
     },
 
