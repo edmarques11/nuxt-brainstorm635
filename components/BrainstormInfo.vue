@@ -1,38 +1,31 @@
 <template>
     <v-layout>
         <v-row>
-            <v-col cols="12" sm="4">
-                <!-- <p class="mb-0">
-                    Theme/Description <span class="red--text">*</span>
-                </p> -->
+            <v-col cols="12" sm="6" md="4">
                 <v-text-field
                     v-model="description"
                     hide-details
                     dense
                     outlined
-                    label="Theme/Description"
+                    label="Theme/Description *"
                     placeholder="Brainstorm desciption"
                     :disabled="!isLeader"
                     @blur="saveInfos()"
                     prepend-inner-icon="mdi-clipboard-text-outline"
                 />
             </v-col>
-            <v-col cols="12" sm="3">
-                <!-- <p class="mb-0">Rounds Time <span class="red--text">*</span></p> -->
-
+            <v-col cols="12" sm="6" md="3">
                 <v-select
                     v-model="roundsTime"
                     outlined
                     dense
                     :items="times"
-                    label="Rounds Time"
+                    label="Rounds Time *"
                     :disabled="!isLeader"
                     prepend-inner-icon="mdi-clock-outline"
                 />
             </v-col>
-            <v-col cols="12" sm="3">
-                <!-- <p class="mb-0">Brainstorm code</p> -->
-                
+            <v-col cols="12" sm="6" md="3">
                 <v-layout>
                     <v-text-field
                         v-model="brainstormId"
@@ -52,6 +45,7 @@
                                 v-bind="attrs"
                                 v-on="on"
                                 class="copy-button mr-0"
+                                color="transparent"
                                 @click.stop.prevent="copyCodeToClipboad(brainstormId)"
                             >
                                 <v-icon dark>
@@ -63,9 +57,7 @@
                     </v-tooltip>
                 </v-layout>
             </v-col>
-            <v-col cols="12" sm="2">
-                <!-- <p class="mb-0">Active members</p> -->
-
+            <v-col cols="12" sm="6" md="2">
                 <v-text-field
                     v-model="countMembers"
                     hide-details
@@ -185,9 +177,10 @@ export default {
 @import '../assets/variables.scss';
 
 .copy-button {
+    height: 40px;
     border: none !important;
     padding: 0 !important;
-    background-color: #fff !important;
+    background-color: transparent !important;
     color: $primary !important;
 }
 .copy-button:hover {
