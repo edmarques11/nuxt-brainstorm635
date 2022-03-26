@@ -180,7 +180,7 @@ export const actions = {
         try {
             const hourOfStartRound = new Date().getTime()
 
-            this.$firebase
+            await this.$firebase
                 .firestore()
                 .collection('brainstorms')
                 .doc(codeRoom)

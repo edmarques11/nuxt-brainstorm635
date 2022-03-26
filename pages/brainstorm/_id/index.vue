@@ -5,7 +5,10 @@
         </v-row>
         <v-row justify="center" class="mt-8">
             <v-col cols="10">
-                <BrainstormInfo :isLeader="isLeader" :brainstormId="brainstormId" />
+                <BrainstormInfo
+                    :isLeader="isLeader"
+                    :brainstormId="brainstormId"
+                />
             </v-col>
         </v-row>
         <v-row justify="center">
@@ -47,7 +50,10 @@ export default {
             }
         },
         isLeader() {
-            return this.$store.getters['brainstorm/leader'] === this.$store.getters['user/getUid']
+            return (
+                this.$store.getters['brainstorm/leader'] ===
+                this.$store.getters['user/getUid']
+            )
         },
         currentRound() {
             return this.$store.getters['brainstorm/getCurrentRound']
@@ -61,7 +67,10 @@ export default {
         try {
             await this.$store.dispatch('brainstorm/verifyRunningAndStop')
 
-            await this.$store.dispatch('brainstorm/getBrainstormInfos', 'RoomSale')
+            await this.$store.dispatch(
+                'brainstorm/getBrainstormInfos',
+                'RoomSale'
+            )
 
             await this.$store.dispatch('user/setUserInfoState')
         } catch (error) {
@@ -84,7 +93,10 @@ export default {
                 await this.$store.dispatch('brainstormRoom/createSheet')
 
                 if (this.isLeader) {
-                    await this.$store.dispatch('brainstorm/setHourStartRound', this.brainstormId)
+                    await this.$store.dispatch(
+                        'brainstorm/setHourStartRound',
+                        this.brainstormId
+                    )
                 }
 
                 success = true
