@@ -48,6 +48,7 @@ export const actions = {
             const currentUser = await dispatch('user/getUserInfo', null, { root: true })
 
             const organizedIdeas = await dispatch('organizeIdeasForSave', currentUser)
+            console.log('>>>>>>>>', organizedIdeas)
 
             organizedIdeas.owner = currentUser.uid
 
@@ -117,7 +118,27 @@ export const actions = {
         }
     },
 
-    async getOldIdeas({ commit, getters, rootGetters }) {
+    async organizeIdeasForRender({ }, data) {
+        const organizedIdeas = []
+        for (const index in Object.keys(data)) {
+            const round = data[`round${Number(index) + 1}`]
+
+            if (round) {
+                delete round.owner
+
+                const ideas = []
+                for (const idx in Object.keys(round)) {
+                    ideas.push(round[`idea${Number(idx) + 1}`])
+                }
+
+                if (ideas.length > 0)
+                    organizedIdeas.push(ideas)
+            }
+        }
+        return organizedIdeas
+    },
+
+    async getOldIdeas({ commit, getters, rootGetters, dispatch }) {
         try {
             const indexSheet = getters['getIndexSheet']
             const { brainstormId, currentRound } = rootGetters['brainstorm/getBrainstorm']
@@ -136,21 +157,7 @@ export const actions = {
 
             delete data.owner
 
-            const organizedIdeas = []
-            for (const index in Object.keys(data)) {
-                const round = data[`round${Number(index) + 1}`]
-
-                delete round.owner
-
-                const ideas = []
-                for (const idx in Object.keys(round)) {
-                    ideas.push(round[`idea${Number(idx) + 1}`])
-                }
-
-                if (ideas.length > 0)
-                    organizedIdeas.push(ideas)
-            }
-
+            const organizedIdeas = await dispatch('organizeIdeasForRender', data)
             commit('SET_OLD_IDEAS', organizedIdeas)
         } catch (error) {
             throw error

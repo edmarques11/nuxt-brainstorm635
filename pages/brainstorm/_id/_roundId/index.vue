@@ -91,8 +91,9 @@ export default {
         }
     },
 
-    mounted() {
+    async mounted() {
         try {
+            await this.getDataToChangeRound()
             this.startTimer()
         } catch (err) {
             console.error(err)
@@ -115,6 +116,15 @@ export default {
             SET_USER_STATE: 'user/SET_USER_STATE'
         }),
 
+        async getDataToChangeRound() {
+            try {
+                await this.chooseSheet()
+                await this.getOldIdeas()
+            } catch (err) {
+                console.error(err)
+            }
+        },
+
         startTimer() {
             try {
                 const { roundsTime, hourOfStartRound } =
@@ -131,8 +141,10 @@ export default {
             }
         },
 
-        changeRouteRound() {
+        async changeRouteRound() {
             try {
+                await this.getDataToChangeRound()
+
                 const pathRound = `/brainstorm/${this.brainstormId}/round${this.currentRound}`
 
                 if (this.$route.path != pathRound) {
@@ -152,16 +164,15 @@ export default {
 
                 this.clock.stopTimer()
 
+                await this.getDataToChangeRound()
+                this.startTimer()
+
                 if (
                     this.$route.params.roundId !==
                     'round' + this.currentRound
                 ) {
                     this.changeRouteRound()
                 }
-
-                await this.chooseSheet()
-                await this.getOldIdeas()
-                this.startTimer()
             } catch (error) {
                 console.error(error)
             }
@@ -202,8 +213,12 @@ export default {
                 }
             }
         },
-        currentRound() {
-            this.changeRouteRound()
+        async currentRound() {
+            try {
+                this.changeRouteRound()
+            } catch (err) {
+                console.error(err)
+            }
         }
     },
 
