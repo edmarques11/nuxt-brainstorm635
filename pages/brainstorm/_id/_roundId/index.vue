@@ -73,6 +73,14 @@ export default {
         }
     },
 
+    mounted() {
+        try {
+            this.initNewRound()
+        } catch (error) {
+            console.error(error)
+        }
+    },
+
     methods: {
         ...mapActions({
             saveNewIdeas: 'writeIdeas/saveNewIdeas',
@@ -88,8 +96,9 @@ export default {
                 const { roundsTime, hourOfStartRound } =
                     this.$store.getters['brainstorm/getBrainstorm']
 
-                this.clock = new this.$clock()
-                this.clock.startTimer(roundsTime, hourOfStartRound)
+                this.clock = new this.$clock(roundsTime, new Date(hourOfStartRound))
+
+                this.clock.startTimer()
             } catch (error) {
                 console.error(error)
             }

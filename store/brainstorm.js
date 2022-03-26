@@ -175,6 +175,22 @@ export const actions = {
             throw error
         }
     },
+
+    async setHourStartRound({ }, codeRoom) {
+        try {
+            const hourOfStartRound = new Date().getTime()
+
+            this.$firebase
+                .firestore()
+                .collection('brainstorms')
+                .doc(codeRoom)
+                .update({
+                    hourOfStartRound
+                })
+        } catch (error) {
+            throw error
+        }
+    },
 }
 
 export const getters = {
