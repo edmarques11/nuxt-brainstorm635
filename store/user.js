@@ -22,7 +22,7 @@ export const actions = {
                 photoURL,
                 uid
             } = await getCurrentUserInfo(this.$firebase)
-
+            
             return {
                 displayName,
                 email,
