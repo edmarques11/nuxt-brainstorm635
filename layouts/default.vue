@@ -3,7 +3,6 @@
         <v-app-bar
             color="white"
             :clipped-left="clipped"
-            fixed
             app
             height="76"
             class="nav-shadow"
@@ -11,7 +10,8 @@
         >
             <img
                 width="70"
-                src="img/logo-transparent.png"
+                src="@/assets/img/logo-transparent.png"
+                to="/"
             />
 
             <v-spacer />
@@ -84,7 +84,7 @@
                     </v-col>
 
                     <v-col cols="4" class="d-flex justify-end">
-                        <v-img max-width="200" src="img/logo-footer.jpg" alt="Brainstorm logo" />
+                        <v-img max-width="200" src="@/assets/img/logo-footer.jpg" alt="Brainstorm logo" />
                     </v-col>
                 </v-row>
             </v-container>
