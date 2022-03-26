@@ -30,7 +30,7 @@
             </v-layout>
         </v-main>
 
-        <!-- <v-footer
+        <v-footer
             :absolute="!fixed"
             app
             tile
@@ -88,7 +88,7 @@
                     </v-col>
                 </v-row>
             </v-container>
-        </v-footer> -->
+        </v-footer>
     </v-app>
 </template>
 
