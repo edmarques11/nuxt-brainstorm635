@@ -23,14 +23,14 @@
             />
             <UserInfo :current-user="currentUser" />
         </v-app-bar>
-        
+
         <v-main class="bg-main">
             <v-layout fill-height class="ma-4">
                 <Nuxt />
             </v-layout>
         </v-main>
 
-        <v-footer
+        <!-- <v-footer
             :absolute="!fixed"
             app
             tile
@@ -48,7 +48,7 @@
                             icon
                         >
                             <a :href="icon.link" target="_blank">
-                            <v-icon 
+                            <v-icon
                                 color="primary" size="28px">
                                 {{ icon.icon }}
                             </v-icon>
@@ -75,7 +75,7 @@
                             icon
                         >
                             <a :href="icon.link" target="_blank">
-                                <v-icon 
+                                <v-icon
                                     color="primary" size="28px">
                                     {{ icon.icon }}
                                 </v-icon>
@@ -88,7 +88,7 @@
                     </v-col>
                 </v-row>
             </v-container>
-        </v-footer>
+        </v-footer> -->
     </v-app>
 </template>
 

@@ -82,7 +82,10 @@ export default {
 
                 await this.$store.dispatch('brainstormRoom/saveInfos')
                 await this.$store.dispatch('brainstormRoom/createSheet')
-                await this.$store.dispatch('brainstorm/setHourStartRound', this.brainstormId)
+
+                if (this.isLeader) {
+                    await this.$store.dispatch('brainstorm/setHourStartRound', this.brainstormId)
+                }
 
                 success = true
             } catch (error) {

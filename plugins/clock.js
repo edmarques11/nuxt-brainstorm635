@@ -9,8 +9,13 @@ class Clock {
 
         const timeSecondsDifference = Math.trunc((currentTime - hourOfStartRound) / 1000)
 
-        const timeSeconds = (minutes * 60 + seconds) -
-            (timeSecondsDifference > 0 ? timeSecondsDifference : 0)
+        const minutesStarted = Math.trunc(timeSecondsDifference / 60)
+        let timeSeconds = 0
+
+        if (minutesStarted < 5) {
+            timeSeconds = (minutes * 60 + seconds) -
+                (timeSecondsDifference > 0 ? timeSecondsDifference : 0)
+        }
 
         this.__timeSeconds = timeSeconds
         this.__time = roundsTime
