@@ -4,7 +4,7 @@
             <client-only>
                 <v-img
                     max-width="100"
-                    src="/img/logo-background-white.png"
+                    src="@/assets/img/logo-background-white.png"
                 />
             </client-only>
         </v-row>
@@ -36,7 +36,7 @@
                         :class="$vuetify.breakpoint.smAndDown ? 'ml-0' : 'ml-2'"
                         @click="login()"
                     >
-                        <img width="30" class="mr-2" src="/img/google.png" />         
+                        <img width="30" class="mr-2" src="@/assets/img/google.png" />         
                         Login with Google
                     </v-btn>
                 </div>
