@@ -1,13 +1,19 @@
 <template>
-    <v-layout justify-center>
-        <v-list min-width="100%">
-            <v-list-item v-for="(user, index) in listGuests" :key="index" class="px-0">
+    <v-layout justify="center">
+        <v-list min-width="100%" color="transparent">
+            <v-list-item
+                v-for="(user, index) in listGuests"
+                :key="index"
+                :class="$vuetify.breakpoint.smAndDown ? '' : 'px-0'"
+            >
                 <v-list-item-content>
                     <v-row>
                         <v-col cols="4" sm="2" md="3">
                             <v-img
-                                width="40"
-                                height="40"
+                                min-width="40"
+                                min-height="40"
+                                max-width="40"
+                                max-height="40"
                                 :src="user.photoURL"
                                 class="rounded-pill ml-auto"
                             />
@@ -16,7 +22,8 @@
                             cols="8"
                             sm="10"
                             md="9"
-                            class="align-self-center pl-0"
+                            class="align-self-center"
+                            :class="$vuetify.breakpoint.smAndDown ? '' : 'pl-0'"
                         >
                             <span>{{ user.displayName }}</span>
                         </v-col>
