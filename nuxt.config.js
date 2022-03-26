@@ -2,6 +2,7 @@ import colors from 'vuetify/es5/util/colors'
 
 export default {
     // Global page headers: https://go.nuxtjs.dev/config-head
+    ssr: false,
     head: {
         titleTemplate: '%s - Ferramenta colaborativa de criatividade.',
         title: 'Brainstorm635.com',
@@ -12,7 +13,7 @@ export default {
             { name: 'format-detection', content: 'telephone=no' }
         ],
         link: [
-            { rel: 'icon', type: 'image/x-icon', href: '/img/logo-transparent.png' }
+            { rel: 'icon', type: 'image/x-icon', href: '/logo-transparent.png' }
         ]
     },
 
