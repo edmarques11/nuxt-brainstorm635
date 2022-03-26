@@ -8,11 +8,13 @@
             class="nav-shadow"
             :class="$vuetify.breakpoint.smAndDown ? '' : 'px-5'"
         >
-            <img
-                width="70"
-                src="@/assets/img/logo-transparent.png"
-                to="/"
-            />
+            <NuxtLink to="/">
+                <img
+                    width="70"
+                    src="@/assets/img/logo-transparent.png"
+                    to="/"
+                />
+            </NuxtLink>
 
             <v-spacer />
 
@@ -31,14 +33,15 @@
         </v-main>
 
         <v-footer
-            :absolute="!fixed"
             app
             tile
-            elevation="2"
+            elevation="3"
             color="#fff"
             class="border-footer"
+            :height="$vuetify.breakpoint.xs ? '150' : '80'"
         >
-            <v-container fluid class="pa-0">
+            <v-container fluid class="py-0 px-5">
+            
                 <v-row v-if="$vuetify.breakpoint.smAndDown" justify="center" align="center">
                     <v-col cols="12" class="text-center">
                         <v-btn
@@ -59,9 +62,18 @@
 
                 <v-divider v-if="$vuetify.breakpoint.smAndDown"></v-divider>
 
-                <v-row justify="space-between" align="center" no-gutters class="py-1">
-                    <v-col cols="8" sm="4">
-                        <v-card-text>
+                <v-row
+                    :justify="$vuetify.breakpoint.xs ? '' : 'space-around'"
+                    align="center"
+                    no-gutters
+                    class="py-1"
+                >
+                    <v-col
+                        cols="12"
+                        sm="4"
+                        :class="$vuetify.breakpoint.xs ? 'text-center' : ''"
+                    >
+                        <v-card-text class="text-body-4">
                             <span>&copy; CopyLeft</span>
                             <span> <strong> 2020 - 2022 </strong></span>
                         </v-card-text>
@@ -83,8 +95,11 @@
                         </v-btn>
                     </v-col>
 
-                    <v-col cols="4" class="d-flex justify-end">
-                        <v-img max-width="200" src="@/assets/img/logo-footer.jpg" alt="Brainstorm logo" />
+                    <v-col
+                        cols="12" sm="4"
+                        :class="$vuetify.breakpoint.xs ? 'text-center' : 'd-flex justify-end'"
+                    >
+                        <img width="210" src="@/assets/img/logo-footer-transparent.png" alt="Brainstorm logo" />
                     </v-col>
                 </v-row>
             </v-container>
@@ -111,11 +126,11 @@ export default {
 
     async mounted () {
         try {
-            const { displayName, photoURL } = await this.$store.dispatch(
-                'user/getUserInfo'
-            )
+            const { displayName, photoURL } = await this.$store.dispatch('user/getUserInfo')
             this.currentUser = { displayName, photoURL }
-        } catch (error) {}
+        } catch (err) {
+            console.error(err)
+        }
     }
 }
 </script>
@@ -139,5 +154,10 @@ export default {
 a {
     text-decoration: none !important;
 }
+
+.v-card__text {
+    font-size: 1.1rem !important;
+}
+
 </style>
 
