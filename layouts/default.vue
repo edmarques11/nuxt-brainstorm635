@@ -3,7 +3,7 @@
         <NavBar />
 
         <v-main class="bg-main">
-            <v-layout fill-height class="ma-4">
+            <v-layout class="ma-4">
                 <Nuxt />
             </v-layout>
         </v-main>
