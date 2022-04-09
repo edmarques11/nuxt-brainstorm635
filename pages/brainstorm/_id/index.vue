@@ -3,7 +3,7 @@
         <v-row justify="center">
             <h2 class="page-tittle tittle">BRAINSTORM</h2>
         </v-row>
-        <v-row justify="center" class="mt-8">
+        <v-row justify="center" class="mt-10">
             <v-col cols="10">
                 <BrainstormInfo :isLeader="isLeader" :brainstormId="brainstormId" />
             </v-col>
