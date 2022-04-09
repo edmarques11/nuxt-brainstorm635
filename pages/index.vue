@@ -7,7 +7,7 @@
         </v-row>
 
         <v-row justify="center">
-            <v-col cols="8" md="6">
+            <v-col cols="8" md="6" :class="$vuetify.breakpoint.smAndDown ? 'px-0' : ''">
                 <v-row justify="center">
                     <v-col class="text-center">
                         <v-btn
