@@ -1,4 +1,4 @@
-import { getCurrentUserInfo } from "~/libs/helpFunctions"
+import { getCurrentUserInfo } from '~/libs/helpFunctions'
 
 export const state = () => ({
     displayName: '',
@@ -22,7 +22,7 @@ export const actions = {
                 photoURL,
                 uid
             } = await getCurrentUserInfo(this.$firebase)
-
+            
             return {
                 displayName,
                 email,

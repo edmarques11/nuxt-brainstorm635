@@ -12,7 +12,10 @@
                     </v-row>
                 </v-card>
             </v-container>
-            <v-container class="mt-8">
+            <v-container class="mt-10">
+                <GridOldIdeas :oldIdeas="oldIdeas" />
+            </v-container>
+            <v-container>
                 <RowWriteIdeas />
             </v-container>
         </v-col>
@@ -21,18 +24,28 @@
 
 <script>
 import RowWriteIdeas from '~/components/writeIdeas/RowWriteIdeas.vue'
+import GridOldIdeas from '~/components/writeIdeas/GridOldIdeas.vue'
+
+import { mapActions, mapGetters } from 'vuex'
+
 export default {
     name: 'WriteIdeas',
 
-    components: { RowWriteIdeas },
+    components: { RowWriteIdeas, GridOldIdeas },
 
     data: () => ({
         clock: {
-            getTime: () => '0:0'
+            getTime: () => '0:0',
+            stopTimer: () => {}
         }
     }),
 
     computed: {
+        ...mapGetters({
+            currentRound: 'brainstorm/getCurrentRound',
+            brainstormId: 'brainstorm/getBrainstormId',
+            oldIdeas: 'writeIdeas/getOldIdeas'
+        }),
         running: {
             get() {
                 return this.$store.getters['brainstorm/getRunning']
@@ -47,9 +60,6 @@ export default {
         description() {
             return this.$store.getters['brainstorm/getBrainstorm'].description
         },
-        currentRound() {
-            return this.$store.getters['brainstorm/getCurrentRound']
-        },
         time() {
             return this.clock.getTime()
         }
@@ -57,40 +67,80 @@ export default {
 
     async created() {
         try {
-            await this.$store.dispatch(
-                'brainstorm/getBrainstormInfos',
-                'writeIdeas'
-            )
+            await this.getBrainstormInfos('writeIdeas')
         } catch (error) {
             console.error(error)
         }
     },
 
-    mounted() {
-        try {
-            const { roundsTime, hourOfStartRound } =
-                this.$store.getters['brainstorm/getBrainstorm']
+    methods: {
+        ...mapActions({
+            saveNewIdeas: 'writeIdeas/saveNewIdeas',
+            verifyRunningAndStop: 'brainstorm/verifyRunningAndStop',
+            stopListener: 'listeners/stopListener',
+            getBrainstormInfos: 'brainstorm/getBrainstormInfos',
+            chooseSheet: 'writeIdeas/chooseSheet',
+            getOldIdeas: 'writeIdeas/getOldIdeas'
+        }),
 
-            this.$store.dispatch('writeIdeas/chooseSheet')
+        startTimer() {
+            try {
+                const { roundsTime, hourOfStartRound } =
+                    this.$store.getters['brainstorm/getBrainstorm']
 
-            this.clock = new this.$clock()
-            this.clock.startTimer(roundsTime, hourOfStartRound)
-        } catch (error) {
-            console.error(error)
+                this.clock = new this.$clock()
+                this.clock.startTimer(roundsTime, hourOfStartRound)
+            } catch (error) {
+                console.error(error)
+            }
+        },
+
+        async initNewRound(roundSaveIdeas) {
+            try {
+                await this.chooseSheet()
+                await this.getOldIdeas()
+
+                if (
+                    this.$route.params.roundId !==
+                    'round' + this.currentRound
+                ) {
+                    this.$router.replace({
+                        path: `/brainstorm/${this.brainstormId}/round${this.currentRound}`
+                    })
+                }
+
+                this.clock.stopTimer()
+
+                await this.saveNewIdeas(roundSaveIdeas)
+
+                this.startTimer()
+            } catch (error) {
+                console.error(error)
+            }
         }
     },
 
     watch: {
-        running(newVal) {
+        async running(newVal) {
             if (!newVal) {
-                this.$store.dispatch('brainstorm/verifyRunningAndStop')
+                try {
+                    await this.saveNewIdeas()
+
+                    this.verifyRunningAndStop()
+                } catch (error) {
+                    console.error(error)
+                }
             }
+        },
+
+        currentRound(newVal, oldVal) {
+            this.initNewRound(oldVal)
         }
     },
 
     beforeDestroy() {
         this.clock.stopTimer()
-        this.$store.dispatch('listeners/stopListener', 'writeIdeas')
+        this.stopListener('writeIdeas')
     }
 }
 </script>

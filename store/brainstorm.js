@@ -15,7 +15,7 @@ export const state = () => ({
         photoURL: '',
         uid: ''
     }],
-    roundsTime: '5:00',
+    roundsTime: '5:00 min',
     running: false
 })
 
@@ -138,6 +138,8 @@ export const actions = {
     },
 
     async getBrainstormInfos({ commit, getters }, localListener) {
+        if (process.server) return
+
         try {
             let brainstormId = getters['getBrainstorm'].brainstormId
 

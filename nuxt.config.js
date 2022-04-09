@@ -2,6 +2,7 @@ import colors from 'vuetify/es5/util/colors'
 
 export default {
     // Global page headers: https://go.nuxtjs.dev/config-head
+    ssr: false,
     head: {
         titleTemplate: '%s - Ferramenta colaborativa de criatividade.',
         title: 'Brainstorm635.com',
@@ -12,13 +13,13 @@ export default {
             { name: 'format-detection', content: 'telephone=no' }
         ],
         link: [
-            { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }
+            { rel: 'icon', type: 'image/x-icon', href: '/logo-transparent.png' }
         ]
     },
 
     // Global CSS: https://go.nuxtjs.dev/config-css
     css: [
-        '~/assets/vuetify.css',
+        '~/assets/main.css',
         '~/assets/customized.scss'
     ],
 
@@ -31,7 +32,10 @@ export default {
     ],
 
     // Auto import components: https://go.nuxtjs.dev/config-components
-    components: true,
+    components: [
+        '~/components',
+        '~/components/app',
+    ],
 
     // Modules for dev and build (recommended): https://go.nuxtjs.dev/config-modules
     buildModules: [
@@ -43,7 +47,13 @@ export default {
     modules: [
         // https://go.nuxtjs.dev/pwa
         '@nuxtjs/pwa',
+        'nuxt-sweetalert2',
+        'nuxt-clipboard',
     ],
+
+    clipboard: {
+        autoSetContainer: true,
+    },
 
     // PWA module configuration: https://go.nuxtjs.dev/pwa
     pwa: {
@@ -59,9 +69,9 @@ export default {
             light: true,
             themes: {
                 light: {
-                    primary: '#4e4d4d',
+                    primary: '#3bb5e0',
                     accent: colors.grey.lighten3,
-                    secondary: '#3bb5e0',
+                    secondary: '#4e4d4d',
                     info: colors.teal.darken1,
                     warning: colors.amber.base,
                     error: colors.deepOrange.accent4,
