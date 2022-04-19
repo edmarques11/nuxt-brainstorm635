@@ -5,11 +5,44 @@
         </v-row>
         
         <v-row justify="center">
-            <v-card min-width="80%" max-width="1264" color="primary lighten-5" elevation="5" class="brainstorm-infos-card mx-aut">
+            <v-card
+                min-width="80%"
+                max-width="1264"
+                :elevation="scrolled ? '5' : '0'"
+                :class="scrolled ? 'brainstorm-infos-card-scrolled' : 'brainstorm-infos-card'"
+            >
                 <v-row justify="center">
-                    <v-col cols="12" md="4" class="text-center">{{ description }}</v-col>
-                    <v-col cols="12" md="4" class="text-center">Round {{ currentRound }}</v-col>
-                    <v-col cols="12" md="4" class="text-center">{{ time }}</v-col>
+                    <v-col cols="12" md="4" class="text-center d-flex justify-center align-center">
+                        <v-icon
+                            :color="scrolled ? '#fff' : 'primary'"
+                            size="30"
+                            class="mr-3"
+                        >
+                            mdi-clipboard-text-outline
+                        </v-icon>
+                        <span>{{ description }}</span>
+                    </v-col>
+                    
+                    <v-col cols="12" md="4" class="text-center d-flex justify-center align-center">
+                        <v-icon
+                            :color="scrolled ? '#fff' : 'primary'"
+                            size="30"
+                            class="mr-3"
+                        >
+                            mdi-boxing-glove
+                        </v-icon>
+                        <span>Round {{ currentRound }}</span>
+                    </v-col>
+
+                    <v-col cols="12" md="4" class="text-center d-flex justify-center align-center">
+                        <v-icon
+                            :color="scrolled ? '#fff' : 'primary'"
+                            size="30"
+                            class="mr-3"
+                        >
+                            mdi-clock-time-nine-outline</v-icon>
+                        <span>{{ time }}</span>
+                    </v-col>
                 </v-row>
             </v-card>
         </v-row>
@@ -19,6 +52,7 @@
         </v-container>
         
         <v-container>
+            <RowWriteIdeas />
             <RowWriteIdeas />
         </v-container>
     </v-container>
@@ -39,7 +73,8 @@ export default {
         clock: {
             getTime: () => '0:0',
             stopTimer: () => {}
-        }
+        },
+        scrolled: false,
     }),
 
     computed: {
@@ -48,6 +83,7 @@ export default {
             brainstormId: 'brainstorm/getBrainstormId',
             oldIdeas: 'writeIdeas/getOldIdeas'
         }),
+
         running: {
             get() {
                 return this.$store.getters['brainstorm/getRunning']
@@ -59,38 +95,50 @@ export default {
                 })
             }
         },
-        description() {
+
+        description () {
             return this.$store.getters['brainstorm/getBrainstorm'].description
         },
-        time() {
+
+        time () {
             return this.clock.getTime()
         }
     },
 
-    async created() {
+    async created () {
         try {
             await this.getBrainstormInfos('writeIdeas')
-        } catch (error) {
-            console.error(error)
+        } catch (err) {
+            console.error(err)
         }
     },
 
-    computed: {
-        verifyScroll () {
-            let nav = document.getElementById('nav');
-            
-            window.addEventListener('scroll', function(event) {
+    beforeMount () {
+        window.addEventListener('scroll', this.handleScroll);
+    },
 
-                if (window.pageYOffset > 100) {
+    watch: {
+        async running(newVal) {
+            if (!newVal) {
+                try {
+                    await this.saveNewIdeas()
 
-                    nav.style.background = '#007bff';
-
+                    this.verifyRunningAndStop()
+                } catch (err) {
+                    console.error(err)
                 }
-                else{
-                    nav.style.background = 'transparent';
-                }
-            });
+            }
+        },
+
+        currentRound(newVal, oldVal) {
+            this.initNewRound(oldVal)
         }
+    },
+
+    beforeDestroy () {
+        this.clock.stopTimer()
+        this.stopListener('writeIdeas')
+        window.removeEventListener('scroll', this.handleScroll);
     },
 
     methods: {
@@ -103,6 +151,14 @@ export default {
             getOldIdeas: 'writeIdeas/getOldIdeas'
         }),
 
+        handleScroll () {
+            if (window.scrollY > 115) {
+                this.scrolled = true;
+            } else {
+                this.scrolled = false;
+            }
+        },
+
         startTimer() {
             try {
                 const { roundsTime, hourOfStartRound } =
@@ -110,8 +166,8 @@ export default {
 
                 this.clock = new this.$clock()
                 this.clock.startTimer(roundsTime, hourOfStartRound)
-            } catch (error) {
-                console.error(error)
+            } catch (err) {
+                console.error(err)
             }
         },
 
@@ -134,43 +190,41 @@ export default {
                 await this.saveNewIdeas(roundSaveIdeas)
 
                 this.startTimer()
-            } catch (error) {
-                console.error(error)
+            } catch (err) {
+                console.error(err)
             }
         }
     },
-
-    watch: {
-        async running(newVal) {
-            if (!newVal) {
-                try {
-                    await this.saveNewIdeas()
-
-                    this.verifyRunningAndStop()
-                } catch (error) {
-                    console.error(error)
-                }
-            }
-        },
-
-        currentRound(newVal, oldVal) {
-            this.initNewRound(oldVal)
-        }
-    },
-
-    beforeDestroy() {
-        this.clock.stopTimer()
-        this.stopListener('writeIdeas')
-    }
 }
 </script>
 
 <style scoped lang="scss">
+@import '../../../../assets/variables.scss';
+
 .brainstorm-infos-card {
-   /*  display: relative !important; */
+    padding: 1rem 0;
+    color: $terciary!important;
+    font-weight: bold;
+    font-size: 1.2rem;
+    background-color: transparent !important;
+    position: relative;
+    transform: translateY(5px);
+    opacity: 1;
+    transition: 1s all ease;
+}
+
+.brainstorm-infos-card-scrolled {
     position: fixed;
+    top: 80px;
     padding: 1rem 0;
     z-index: 2 !important;
+    color: $terciary !important;
+    font-weight: bold;
+    border-color: $primary !important;
+    background-color: $primary !important;
+    transform: translateY(0);
+    transition: 1s all ease;
+    opacity: 1;
 }
 
 .brainstorm-infos-card-scrolled {
