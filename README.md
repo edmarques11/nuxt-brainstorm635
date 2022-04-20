@@ -1,5 +1,7 @@
 # nuxt-brainstorm635
 
+## Link para a aplicação online: https://brainstorm635.herokuapp.com/
+
 ## Build Setup
 
 ```bash
