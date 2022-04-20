@@ -1,6 +1,6 @@
 <template>
     <v-container>
-        <v-row justify="center" class="mb-5">
+        <v-row justify="center" class="mb-4">
             <h2 class="page-tittle tittle">Brainstorm 635 online</h2>
         </v-row>
         
@@ -47,12 +47,11 @@
             </v-card>
         </v-row>
 
-        <v-container v-if="oldIdeas" class="mt-15">
+        <v-container v-if="oldIdeas.length > 0" class="mt-15">
             <GridOldIdeas :oldIdeas="oldIdeas" />
         </v-container>
         
-        <v-container>
-            <RowWriteIdeas />
+        <v-container class="mt-3">
             <RowWriteIdeas />
         </v-container>
     </v-container>
